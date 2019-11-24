@@ -1,0 +1,13 @@
+{
+  "name": "wixxa_guard",
+  "version": "0.0.0",
+  "description": "wixxaGuard discord bot",
+  "main": "index.js",
+  "repository": "https://github.com/ProPanek/wixxaGuard",
+  "author": "ProPanek <oga.seb@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "dotenv": "^8.2.0"
+  }
+}
