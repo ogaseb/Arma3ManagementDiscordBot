@@ -116,13 +116,15 @@ const processCommand = async receivedMessage => {
 
     const result = orderBy(usersArray, ["wixxaPoints"], ["desc"]);
 
-    let responseString = `\`\`\`RANKING\n`;
+    let responseString;
     result.forEach((item, index) => {
+      if (index === 0) {
+        responseString += `\`\`\`RANKING\n`;
+      }
       responseString += `${index + 1}. ${item.name}: ${
         item.wixxaPoints
       } PUNKTÓW MŁYNNU \n`;
     });
-    responseString += `\`\`\``;
     return receivedMessage.channel.send(responseString);
   }
 
@@ -134,8 +136,24 @@ const processCommand = async receivedMessage => {
 
   if (primaryCommand === "HYMN") {
     return receivedMessage.channel.send(
-      `https://www.youtube.com/watch?v=-Kf8WqnXdvs`
+      `https://www.youtube.com/watch?v=baRjEiOD2_c`
     );
+  }
+
+  if (
+    primaryCommand === "ID" &&
+    receivedMessage.channel.id === process.env.ADMIN_CHANNEL_ID
+  ) {
+    const members = receivedMessage.channel.guild.roles.get(
+      "646815756188909598"
+    ).members;
+
+    let sendString = ``;
+    for (const role of members) {
+      sendString += `${role[1].user.username} - ${role[1].user.id}\n`;
+    }
+
+    receivedMessage.channel.send(`\`\`\`${sendString}\`\`\``);
   }
 
   if (
@@ -168,7 +186,7 @@ const processCommand = async receivedMessage => {
     return client.channels
       .get(process.env.CHANNEL_ID)
       .send(
-        `${foundArgsObj.MENTION} DOSTAŁEŚ ${
+        `${foundArgsObj.MENTION} OTRZYMUJESZ ${
           foundArgsObj.NUMBER < 0 ? `KARNE` : `BONUSOWE`
         } PUNKTY MLYNNU W ILOŚCI \`${foundArgsObj.NUMBER}\` ZA ${
           foundArgsObj.CONTENT
