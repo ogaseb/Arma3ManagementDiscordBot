@@ -170,7 +170,7 @@ const processCommand = async receivedMessage => {
       .send(
         `${foundArgsObj.MENTION} DOSTAŁEŚ ${
           foundArgsObj.NUMBER < 0 ? `KARNE` : `BONUSOWE`
-        } PUNKTY W ILOŚCI \`${foundArgsObj.NUMBER}\` ZA ${
+        } PUNKTY MLYNNU W ILOŚCI \`${foundArgsObj.NUMBER}\` ZA ${
           foundArgsObj.CONTENT
         } W SUMIE TO MASZ ICH JUŻ \`${newUser[1][0].dataValues.wixxaPoints}\``
       );
@@ -192,10 +192,4 @@ const processText = async receivedMessage => {
       }
     }
   }
-  // if (!receivedMessage.content.match(regexes.LINK)){
-  // const isLowerCase = (string) => !string.match(/^[A-Z\s\W\d]*$/gm)
-  // if(isLowerCase(receivedMessage.content)){
-
-  // console.log(isLowerCase(receivedMessage.content))
-  // }
 };
