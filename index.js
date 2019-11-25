@@ -49,6 +49,7 @@ client.on("message", receivedMessage => {
 
 client.on("guildMemberUpdate", async receivedMessage => {
   const guild = client.guilds.get(process.env.GUILD_ID);
+  console.log(client.guilds);
   const role = guild.roles.find(
     role => role.name === ":ribbon:MŁYNN 2.0:ribbon:"
   );
