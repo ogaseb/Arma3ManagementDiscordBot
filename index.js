@@ -116,7 +116,7 @@ const processCommand = async receivedMessage => {
 
     const result = orderBy(usersArray, ["wixxaPoints"], ["desc"]);
 
-    let responseString;
+    let responseString = ``;
     result.forEach((item, index) => {
       if (index === 0) {
         responseString += `\`\`\`RANKING\n`;
@@ -125,7 +125,7 @@ const processCommand = async receivedMessage => {
         item.wixxaPoints
       } PUNKTÓW MŁYNNU \n`;
     });
-    return receivedMessage.channel.send(responseString);
+    return receivedMessage.channel.send(responseString + `\`\`\``);
   }
 
   if (primaryCommand === "ZASADY") {
