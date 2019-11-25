@@ -12,3 +12,29 @@ module.exports.addWixxaUser = obj => {
     defaults: obj
   });
 };
+
+module.exports.getWixxaUser = async discordId => {
+  return WixxaUsers.findOne({
+    where: {
+      discordId
+    }
+  });
+};
+
+module.exports.updateWixxaPoints = async obj => {
+  return WixxaUsers.update(
+    {
+      wixxaPoints: obj.wixxaPoints
+    },
+    {
+      where: {
+        discordId: obj.discordId
+      },
+      returning: true
+    }
+  );
+};
+
+module.exports.getAllWixxaUsers = async () => {
+  return WixxaUsers.findAll();
+};
