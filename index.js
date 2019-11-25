@@ -71,7 +71,7 @@ client.on("guildMemberUpdate", async receivedMessage => {
     await client.channels
       .get(process.env.CHANNEL_ID)
       .send(
-        `${helloArray[Math.floor(Math.random() * 6)]} <@${
+        `${helloArray[Math.floor(Math.random() * 5)]} <@${
           receivedMessage.user.id
         }>`
       );
