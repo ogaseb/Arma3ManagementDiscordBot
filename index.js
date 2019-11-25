@@ -33,10 +33,6 @@ client.on("ready", async () => {
   await client.user.setActivity(`BRAMKE NA WEJŚCIU`, {
     type: "WATCHING"
   });
-
-  // setInterval(async () => {
-  //   await urlStatus(client);
-  // }, 1000 * 60 * 60 * 24);
 });
 
 client.on("message", receivedMessage => {
@@ -55,17 +51,29 @@ client.on("guildMemberUpdate", async receivedMessage => {
   const guild = client.guilds.get(process.env.GUILD_ID);
   const role = guild.roles.find(role => role.name === "WIXIARA");
   const user = role.members.get(receivedMessage.user.id);
-
+  console.log(user);
   if (user) {
     const obj = {
       discordId: user.id,
-      name: user.username,
+      name: receivedMessage.user.username,
       wixxaPoints: 0
     };
+
+    const helloArray = [
+      "SIEMANO KURWA",
+      "USIĄDŹ I DUPNIJ SE LOLKA CZŁOWIEKU",
+      "KORZYSTAJ Z MŁYNU MĄDRZE",
+      "SKOSZTUJ WIXY",
+      "NO ELO"
+    ];
     await addWixxaUser(obj);
     await client.channels
       .get(process.env.CHANNEL_ID)
-      .send(`NO ELO <@${receivedMessage.user.id}>`);
+      .send(
+        `${helloArray[Math.floor(Math.random() * 6)]} <@${
+          receivedMessage.user.id
+        }>`
+      );
   }
 });
 
@@ -74,9 +82,7 @@ const processCommand = async receivedMessage => {
 
   fullCommand = receivedMessage.content.substr(1);
   if (!fullCommand) {
-    receivedMessage.channel.send(
-      `EJ TYPIE O CO CI CHODZI WPISZ "!POMOC" MAM CIE ZA REKE PROWADZIC?`
-    );
+    receivedMessage.channel.send(`EJ TYPIE O CO CI CHODZI, WYJEBAC CI???`);
   }
 
   const messageArguments = fullCommand.match(regexes.ARGUMENTS);
@@ -85,10 +91,6 @@ const processCommand = async receivedMessage => {
     primaryCommand = messageArguments[0]; // The first word directly after the exclamation is the command
     messageArguments.splice(0, 1);
   }
-  console.log("primary command: " + primaryCommand);
-  console.log("arguments: " + messageArguments);
-
-  console.log(fullCommand);
 
   if (primaryCommand === "INIT") {
     const guild = client.guilds.get(process.env.GUILD_ID);
@@ -105,7 +107,6 @@ const processCommand = async receivedMessage => {
   }
 
   if (primaryCommand === "RANKING") {
-    console.log("ranking");
     const users = await getAllWixxaUsers();
     let usersArray = [];
     users.forEach(user => {
@@ -125,16 +126,21 @@ const processCommand = async receivedMessage => {
   }
 
   if (primaryCommand === "ZASADY") {
-    console.log("pomoc");
-    return;
+    return receivedMessage.channel.send(
+      `\`\`\`TO JEST MŁYN\nPOZWÓL ZE PRZEDSTAWIĘ ZASADY:\n1. PISZEMY TYLKO CAPSEM\n2. SZYDZIMY ZE WSZYSTKIEGO I WSZYSTKICH \n3. ODPIERDALANY JAKIŚ SZAJS CHUJ WIE PO CO\n4. WSZYSTKO CO JEST NA MŁYNIE ZOSTAJE NA MŁYNIE \n\nUWAGA!!!\nMOBBYN, HEWERKA, TEDZIK I INNE CYTATY MILE WIDZIANE\`\`\``
+    );
+  }
+
+  if (primaryCommand === "HYMN") {
+    return receivedMessage.channel.send(
+      `https://www.youtube.com/watch?v=-Kf8WqnXdvs`
+    );
   }
 
   if (
     primaryCommand === "WIXA" &&
     receivedMessage.channel.id === process.env.ADMIN_CHANNEL_ID
   ) {
-    console.log("wixa", messageArguments);
-
     const regexesObj = filteredRegexes(["CONTENT", "NUMBER", "MENTION"]);
 
     let foundArgsObj = {};
@@ -155,7 +161,6 @@ const processCommand = async receivedMessage => {
     }
 
     const discordId = foundArgsObj.MENTION.match(regexes.EXTRACT_MENTION_ID);
-    console.log(discordId);
     const user = await getWixxaUser(discordId);
     user.dataValues.wixxaPoints += parseInt(foundArgsObj.NUMBER);
     const newUser = await updateWixxaPoints(user);
@@ -172,14 +177,12 @@ const processCommand = async receivedMessage => {
 };
 
 const processText = async receivedMessage => {
-  console.log(receivedMessage.member.user.id);
   const message = receivedMessage.content.split(" ");
   for (const item of message) {
-    console.log(item);
     if (!item.match(regexes.MENTION) || !item.match(regexes.LINK)) {
       if (!!item.match(regexes.LOWERCASE)) {
         receivedMessage.channel.send(
-          `NO TO LECĄ KARNE PUNKCIKI <@${receivedMessage.member.user.id}>`
+          `NO TO LECĄ KARNE PUNKTY <@${receivedMessage.member.user.id}> REGULAMIN SIE KLANIA`
         );
         const user = await getWixxaUser(receivedMessage.member.user.id);
         user.dataValues.wixxaPoints -= 1;
