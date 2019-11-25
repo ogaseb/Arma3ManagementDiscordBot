@@ -183,7 +183,7 @@ const processText = async receivedMessage => {
     if (!item.match(regexes.MENTION) || !item.match(regexes.LINK)) {
       if (!!item.match(regexes.LOWERCASE)) {
         receivedMessage.channel.send(
-          `NO TO LECĄ KARNE PUNKTY <@${receivedMessage.member.user.id}> REGULAMIN SIE KLANIA`
+          `NO TO LECĄ KARNE PUNKTY MLYNNU <@${receivedMessage.member.user.id}> REGULAMIN SIE KLANIA`
         );
         const user = await getWixxaUser(receivedMessage.member.user.id);
         user.dataValues.wixxaPoints -= 1;
