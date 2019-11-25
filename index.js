@@ -49,7 +49,9 @@ client.on("message", receivedMessage => {
 
 client.on("guildMemberUpdate", async receivedMessage => {
   const guild = client.guilds.get(process.env.GUILD_ID);
-  const role = guild.roles.find(role => role.name === "WIXIARA");
+  const role = guild.roles.find(
+    role => role.name === ":ribbon:MŁYNN 2.0:ribbon:"
+  );
   const user = role.members.get(receivedMessage.user.id);
   console.log(user);
   if (user) {
@@ -94,7 +96,9 @@ const processCommand = async receivedMessage => {
 
   if (primaryCommand === "INIT") {
     const guild = client.guilds.get(process.env.GUILD_ID);
-    const members = guild.roles.find(role => role.name === "WIXIARA").members;
+    const members = guild.roles.find(
+      role => role.name === ":ribbon:MŁYNN 2.0:ribbon:"
+    ).members;
     for (const role of members) {
       const obj = {
         discordId: role[1].user.id,
