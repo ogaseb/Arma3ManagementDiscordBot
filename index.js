@@ -1,6 +1,7 @@
 require("dotenv").config();
 const { Client } = require("discord.js");
 const { orderBy } = require("lodash");
+const { getHours, getMinutes } = require("date-fns");
 const { regexes, filteredRegexes } = require("./helpers/helpers");
 const {
   addWixxaUser,
@@ -30,9 +31,63 @@ client.on("ready", async () => {
     });
   });
 
-  await client.user.setActivity(`BRAMKE NA WEJŚCIU`, {
-    type: "WATCHING"
-  });
+  const statusArray = [
+    { status: "ROBIENIE WIXXY", type: "GAMING" },
+    { status: "ULANE KURWY", type: "STREAMING" },
+    { status: "PATOSTREAM KOCIOŁ PANORAMIKSA", type: "WATCHING" }
+  ];
+
+  const mobbynArray = [
+    "https://www.youtube.com/watch?v=baRjEiOD2_c",
+    "https://www.youtube.com/watch?v=rzpQoVG0qD4",
+    "https://www.youtube.com/watch?v=k150Ukps3mw",
+    "https://www.youtube.com/watch?v=dPdY28i9uUQ",
+    "https://www.youtube.com/watch?v=9uQmkD6SDQg",
+    "https://www.youtube.com/watch?v=A-pXUdsLSiI",
+    "https://www.youtube.com/watch?v=TgbVLEAy5ZI",
+    "https://www.youtube.com/watch?v=NX6qzgGyzEk",
+    "https://www.youtube.com/watch?v=CybamrlUjj4",
+    "https://www.youtube.com/watch?v=-pUvSOJry2I",
+    "https://www.youtube.com/watch?v=olE0KiPA-cg",
+    "https://www.youtube.com/watch?v=hydilZqltYA",
+    "https://www.youtube.com/watch?v=TQSS91JvVqc",
+    "https://www.youtube.com/watch?v=QHzl5Ij-Qn4",
+    "https://www.youtube.com/watch?v=PpQjv0sPWWU",
+    "https://www.youtube.com/watch?v=zAumHfTp6jQ",
+    "https://www.youtube.com/watch?v=HfVr3uZ0BZw",
+    "https://www.youtube.com/watch?v=YLZbfDevomg",
+    "https://www.youtube.com/watch?v=5x4Kk_1X_3U",
+    "https://www.youtube.com/watch?v=-0QiCWGmBcw",
+    "https://www.youtube.com/watch?v=miwyMVT_zU0",
+    "https://www.youtube.com/watch?v=m-w9MrIbLpg",
+    "https://www.youtube.com/watch?v=82cgNJBu_Jk",
+    "https://www.youtube.com/watch?v=OWa5TNYc4bY",
+    "https://www.youtube.com/watch?v=DpUtcNiMe40",
+    "https://www.youtube.com/watch?v=DLfvaysoZj8",
+    "https://www.youtube.com/watch?v=WO5MCOvty9U",
+    "https://www.youtube.com/watch?v=2Yy9RP6HQh0",
+    "https://www.youtube.com/watch?v=OjWFxcEIgUQ"
+  ];
+
+  console.log(getHours(new Date()), getMinutes(new Date()));
+
+  setInterval(async () => {
+    const randomNumber = Math.floor(Math.random() * statusArray.length);
+    await client.user.setActivity(statusArray[randomNumber].status, {
+      type: statusArray[randomNumber].type
+    });
+
+    if (getHours(new Date()) === 18 && getMinutes(new Date()) === 0) {
+      await client.channels
+        .get(process.env.CHANNEL_ID)
+        .send(
+          `@everyone ELO DZISIAJ W MLYNNIE GRAMY ${
+            mobbynArray[Math.floor(Math.random() * mobbynArray.length)]
+          }`
+        );
+    }
+    console.log("ping");
+  }, 1000 * 60);
 });
 
 client.on("message", receivedMessage => {
@@ -49,11 +104,10 @@ client.on("message", receivedMessage => {
 
 client.on("guildMemberUpdate", async receivedMessage => {
   const guild = client.guilds.get(process.env.GUILD_ID);
-  console.log(client.guilds);
-  const role = guild.roles.get("646815756188909598");
+  const role = guild.roles.get(process.env.USER_ROLE_ID);
   const user = role.members.get(receivedMessage.user.id);
   console.log(user);
-  if (user) {
+  if (user && user.roles.has(process.env.USER_ROLE_ID)) {
     const obj = {
       discordId: user.id,
       name: receivedMessage.user.username,
@@ -71,7 +125,7 @@ client.on("guildMemberUpdate", async receivedMessage => {
     await client.channels
       .get(process.env.CHANNEL_ID)
       .send(
-        `${helloArray[Math.floor(Math.random() * 5)]} <@${
+        `${helloArray[Math.floor(Math.random() * helloArray.length)]} <@${
           receivedMessage.user.id
         }>`
       );
@@ -95,7 +149,7 @@ const processCommand = async receivedMessage => {
 
   if (primaryCommand === "INIT") {
     const guild = client.guilds.get(process.env.GUILD_ID);
-    const members = guild.roles.get("646815756188909598").members;
+    const members = guild.roles.get(process.env.USER_ROLE_ID).members;
     for (const role of members) {
       const obj = {
         discordId: role[1].user.id,

@@ -8,6 +8,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "date-fns": "^2.8.1",
     "discord.js": "^11.5.1",
     "dotenv": "^8.2.0",
     "lodash": "^4.17.15",
