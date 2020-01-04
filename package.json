@@ -17,7 +17,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js",
+    "dev": "nodemon --inspect index.js",
     "start": "pm2 start ecosystem.config.js --env production"
   },
   "husky": {
@@ -26,7 +26,6 @@
     }
   },
   "devDependencies": {
-    "eslint": "^6.5.0",
     "husky": "^3.0.7",
     "nodemon": "^1.19.4",
     "pm2": "^4.1.2",

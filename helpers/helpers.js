@@ -4,7 +4,7 @@ const regexes = {
   CONTENT: /"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“/gm,
   NUMBER: /^(?!.*<@)-?[0-9]\d*(\.\d+)?/gm,
   MENTION: /(<[^]*[>$])/gm,
-  EXTRACT_MENTION_ID: /(?<=<@)(.*)(?=>)/gm,
+  EXTRACT_MENTION_ID: /(?<=<@!)(.*)(?=>)/gm,
   LINK: /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/gm,
   LOWERCASE: /^[a-z]+$/gm
 };

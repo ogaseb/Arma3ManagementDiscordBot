@@ -148,16 +148,27 @@ const processCommand = async receivedMessage => {
   }
 
   if (primaryCommand === "INIT") {
-    const guild = client.guilds.get(process.env.GUILD_ID);
-    const members = guild.roles.get(process.env.USER_ROLE_ID).members;
-    for (const role of members) {
+    const guildMembers = client.guilds.get(process.env.GUILD_ID).members;
+    let wixxaMembers = [];
+    Array.from(guildMembers, ([key, member]) => {
+      Array.from(member.roles, ([key, role]) => {
+        if (process.env.BOT_PERMISSIONS_USERS.includes(role.id)) {
+          wixxaMembers.push(member);
+        }
+      });
+    });
+    console.log(wixxaMembers);
+
+    // const members = guild.roles.get(process.env.USER_ROLE_ID).members;
+    wixxaMembers.forEach(member => {
       const obj = {
-        discordId: role[1].user.id,
-        name: role[1].user.username,
+        discordId: member.user.id,
+        name: member.user.username,
         wixxaPoints: 0
       };
       addWixxaUser(obj);
-    }
+    });
+    console.log("done");
     return;
   }
 
@@ -214,38 +225,42 @@ const processCommand = async receivedMessage => {
     primaryCommand === "WIXA" &&
     receivedMessage.channel.id === process.env.ADMIN_CHANNEL_ID
   ) {
-    const regexesObj = filteredRegexes(["CONTENT", "NUMBER", "MENTION"]);
+    try {
+      const regexesObj = filteredRegexes(["CONTENT", "NUMBER", "MENTION"]);
 
-    let foundArgsObj = {};
-    for (const regex in regexesObj) {
-      if (regexesObj.hasOwnProperty(regex)) {
-        const itemIndex = await messageArguments.findIndex(value =>
-          value.match(regexesObj[regex])
-        );
-        if (itemIndex === -1) {
-          await receivedMessage.channel.send(
-            `invalid arguments \`${regex}\` for upload command`
+      let foundArgsObj = {};
+      for (const regex in regexesObj) {
+        if (regexesObj.hasOwnProperty(regex)) {
+          const itemIndex = await messageArguments.findIndex(value =>
+            value.match(regexesObj[regex])
           );
-        } else {
-          foundArgsObj[regex] = messageArguments[itemIndex];
-          messageArguments.splice(itemIndex, 1);
+          if (itemIndex === -1) {
+            await receivedMessage.channel.send(
+              `invalid arguments \`${regex}\` for upload command`
+            );
+          } else {
+            foundArgsObj[regex] = messageArguments[itemIndex];
+            messageArguments.splice(itemIndex, 1);
+          }
         }
       }
-    }
 
-    const discordId = foundArgsObj.MENTION.match(regexes.EXTRACT_MENTION_ID);
-    const user = await getWixxaUser(discordId);
-    user.dataValues.wixxaPoints += parseInt(foundArgsObj.NUMBER);
-    const newUser = await updateWixxaPoints(user);
-    return client.channels
-      .get(process.env.CHANNEL_ID)
-      .send(
-        `${foundArgsObj.MENTION} OTRZYMUJESZ ${
-          foundArgsObj.NUMBER < 0 ? `KARNE` : `BONUSOWE`
-        } PUNKTY MLYNNU W ILOŚCI \`${foundArgsObj.NUMBER}\` ZA ${
-          foundArgsObj.CONTENT
-        } W SUMIE TO MASZ ICH JUŻ \`${newUser[1][0].dataValues.wixxaPoints}\``
-      );
+      const discordId = foundArgsObj.MENTION.match(regexes.EXTRACT_MENTION_ID);
+      const user = await getWixxaUser(discordId);
+      user.dataValues.wixxaPoints += parseInt(foundArgsObj.NUMBER);
+      const newUser = await updateWixxaPoints(user);
+      return client.channels
+        .get(process.env.CHANNEL_ID)
+        .send(
+          `${foundArgsObj.MENTION} OTRZYMUJESZ ${
+            foundArgsObj.NUMBER < 0 ? `KARNE` : `BONUSOWE`
+          } PUNKTY MLYNNU W ILOŚCI \`${foundArgsObj.NUMBER}\` ZA ${
+            foundArgsObj.CONTENT
+          } W SUMIE TO MASZ ICH JUŻ \`${newUser[1][0].dataValues.wixxaPoints}\``
+        );
+    } catch (e) {
+      console.log(e);
+    }
   }
 };
 
