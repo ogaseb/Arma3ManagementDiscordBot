@@ -12,6 +12,103 @@ const {
 
 const client = new Client();
 
+const mobbynArray = [
+  "https://www.youtube.com/watch?v=baRjEiOD2_c",
+  "https://www.youtube.com/watch?v=rzpQoVG0qD4",
+  "https://www.youtube.com/watch?v=k150Ukps3mw",
+  "https://www.youtube.com/watch?v=dPdY28i9uUQ",
+  "https://www.youtube.com/watch?v=9uQmkD6SDQg",
+  "https://www.youtube.com/watch?v=A-pXUdsLSiI",
+  "https://www.youtube.com/watch?v=TgbVLEAy5ZI",
+  "https://www.youtube.com/watch?v=NX6qzgGyzEk",
+  "https://www.youtube.com/watch?v=CybamrlUjj4",
+  "https://www.youtube.com/watch?v=-pUvSOJry2I",
+  "https://www.youtube.com/watch?v=olE0KiPA-cg",
+  "https://www.youtube.com/watch?v=hydilZqltYA",
+  "https://www.youtube.com/watch?v=TQSS91JvVqc",
+  "https://www.youtube.com/watch?v=QHzl5Ij-Qn4",
+  "https://www.youtube.com/watch?v=PpQjv0sPWWU",
+  "https://www.youtube.com/watch?v=zAumHfTp6jQ",
+  "https://www.youtube.com/watch?v=HfVr3uZ0BZw",
+  "https://www.youtube.com/watch?v=YLZbfDevomg",
+  "https://www.youtube.com/watch?v=5x4Kk_1X_3U",
+  "https://www.youtube.com/watch?v=-0QiCWGmBcw",
+  "https://www.youtube.com/watch?v=miwyMVT_zU0",
+  "https://www.youtube.com/watch?v=m-w9MrIbLpg",
+  "https://www.youtube.com/watch?v=82cgNJBu_Jk",
+  "https://www.youtube.com/watch?v=OWa5TNYc4bY",
+  "https://www.youtube.com/watch?v=DpUtcNiMe40",
+  "https://www.youtube.com/watch?v=DLfvaysoZj8",
+  "https://www.youtube.com/watch?v=WO5MCOvty9U",
+  "https://www.youtube.com/watch?v=2Yy9RP6HQh0",
+  "https://www.youtube.com/watch?v=OjWFxcEIgUQ",
+  "https://www.youtube.com/watch?v=8eXQzC-uvdY",
+  "https://www.youtube.com/watch?v=I-tncbLJS60",
+  "https://www.youtube.com/watch?v=2a9pFnk0lmE",
+  "https://www.youtube.com/watch?v=2mztrtfFFos",
+  "https://www.youtube.com/watch?v=Ecp6EVhQ5vg",
+  "https://www.youtube.com/watch?v=tEfg1Jjaz5k",
+  "https://www.youtube.com/watch?v=wj0_rYtGLC8",
+  "https://www.youtube.com/watch?v=Qx2ZSGOOIpo",
+  "https://www.youtube.com/watch?v=l4KqQkaggis",
+  "https://www.youtube.com/watch?v=05aPGgNXLAc",
+  "https://www.youtube.com/watch?v=y_ifjEYEMuY",
+  "https://www.youtube.com/watch?v=MGi1hqjhwdA",
+  "https://www.youtube.com/watch?v=Xrwz0r4bjro",
+  "https://www.youtube.com/watch?v=eZ1nDCWct7g",
+  "https://www.youtube.com/watch?v=uUUey09OIPg",
+  "https://www.youtube.com/watch?v=aJBu5tc_HcA",
+  "https://www.youtube.com/watch?v=p33mKNyUnE8",
+  "https://www.youtube.com/watch?v=oM7rv56w2Kg",
+  "https://www.youtube.com/watch?v=XL8xaUYqhNA",
+  "https://www.youtube.com/watch?v=nVZR1pMtFy8",
+  "https://www.youtube.com/watch?v=wzRhU7UBH8I",
+  "https://www.youtube.com/watch?v=u1KbrQE-28s",
+  "https://www.youtube.com/watch?v=oHIHHTQqJSg",
+  "https://www.youtube.com/watch?v=4u_moL9c7f0",
+  "https://www.youtube.com/watch?v=cqFrMvXjUic",
+  "https://www.youtube.com/watch?v=sD2_RCgVXXM",
+  "https://www.youtube.com/watch?v=ZFQs29wcf2s",
+  "https://www.youtube.com/watch?v=zLfTUenrLDY",
+  "https://www.youtube.com/watch?v=HW9756zLvZU",
+  "https://www.youtube.com/watch?v=DpUtcNiMe40",
+  "https://www.youtube.com/watch?v=8eXQzC-uvdY",
+  "https://www.youtube.com/watch?v=I-tncbLJS60",
+  "https://www.youtube.com/watch?v=Okte9cJ10M8",
+  "https://www.youtube.com/watch?v=4aLCfum4PEM",
+  "https://www.youtube.com/watch?v=ay_Te6fY-WM",
+  "https://www.youtube.com/watch?v=hddop73zYoc",
+  "https://www.youtube.com/watch?v=2a9pFnk0lmE",
+  "https://www.youtube.com/watch?v=2mztrtfFFos",
+  "https://www.youtube.com/watch?v=Ecp6EVhQ5vg",
+  "https://www.youtube.com/watch?v=aQE9a9NyLjk",
+  "https://www.youtube.com/watch?v=f2-oZVYvDW4",
+  "https://www.youtube.com/watch?v=atBnC8TKwWI",
+  "https://www.youtube.com/watch?v=YTziiho5QNU",
+  "https://www.youtube.com/watch?v=marsYEhcnCA",
+  "https://www.youtube.com/watch?v=r2eo-8fVzrI",
+  "https://www.youtube.com/watch?v=sAfBMgOJH18",
+  "https://www.youtube.com/watch?v=huq_pR8ReMk",
+  "https://www.youtube.com/watch?v=nfpvrNf_2Q8",
+  "https://www.youtube.com/watch?v=YNisx35hyLo",
+  "https://www.youtube.com/watch?v=74y2nicUKgg",
+  "https://www.youtube.com/watch?v=sPq1RIe4EX4",
+  "https://www.youtube.com/watch?v=Okte9cJ10M8",
+  "https://www.youtube.com/watch?v=P1EG1YJluH8",
+  "https://www.youtube.com/watch?v=3DuSHpGB8YM",
+  "https://www.youtube.com/watch?v=F-x5HIQPwaA",
+  "https://www.youtube.com/watch?v=ricoz-vQ6h8",
+  "https://www.youtube.com/watch?v=SwOXYIEVf0w",
+  "https://www.youtube.com/watch?v=fxsdod5600w",
+  "https://www.youtube.com/watch?v=D0LyJqzaT2Q",
+  "https://www.youtube.com/watch?v=7lGEY9tyIbc",
+  "https://www.youtube.com/watch?v=iVCKMAoOHT4",
+  "https://www.youtube.com/watch?v=stbiK8FfBD4",
+  "https://www.youtube.com/watch?v=nzAGEvpWNJk",
+  "https://www.youtube.com/watch?v=jjkNfl7SBzE",
+  "https://www.youtube.com/watch?v=fH41vPVIVP0"
+];
+
 void (async function() {
   try {
     await client.login(process.env.BOT_TOKEN);
@@ -35,43 +132,6 @@ client.on("ready", async () => {
     { status: "WIXXA MAKER", type: "GAMING" },
     { status: "ULANE KURWY", type: "STREAMING" },
     { status: "PATOSTREAM", type: "WATCHING" }
-  ];
-
-  const mobbynArray = [
-    "https://www.youtube.com/watch?v=baRjEiOD2_c",
-    "https://www.youtube.com/watch?v=rzpQoVG0qD4",
-    "https://www.youtube.com/watch?v=k150Ukps3mw",
-    "https://www.youtube.com/watch?v=dPdY28i9uUQ",
-    "https://www.youtube.com/watch?v=9uQmkD6SDQg",
-    "https://www.youtube.com/watch?v=A-pXUdsLSiI",
-    "https://www.youtube.com/watch?v=TgbVLEAy5ZI",
-    "https://www.youtube.com/watch?v=NX6qzgGyzEk",
-    "https://www.youtube.com/watch?v=CybamrlUjj4",
-    "https://www.youtube.com/watch?v=-pUvSOJry2I",
-    "https://www.youtube.com/watch?v=olE0KiPA-cg",
-    "https://www.youtube.com/watch?v=hydilZqltYA",
-    "https://www.youtube.com/watch?v=TQSS91JvVqc",
-    "https://www.youtube.com/watch?v=QHzl5Ij-Qn4",
-    "https://www.youtube.com/watch?v=PpQjv0sPWWU",
-    "https://www.youtube.com/watch?v=zAumHfTp6jQ",
-    "https://www.youtube.com/watch?v=HfVr3uZ0BZw",
-    "https://www.youtube.com/watch?v=YLZbfDevomg",
-    "https://www.youtube.com/watch?v=5x4Kk_1X_3U",
-    "https://www.youtube.com/watch?v=-0QiCWGmBcw",
-    "https://www.youtube.com/watch?v=miwyMVT_zU0",
-    "https://www.youtube.com/watch?v=m-w9MrIbLpg",
-    "https://www.youtube.com/watch?v=82cgNJBu_Jk",
-    "https://www.youtube.com/watch?v=OWa5TNYc4bY",
-    "https://www.youtube.com/watch?v=DpUtcNiMe40",
-    "https://www.youtube.com/watch?v=DLfvaysoZj8",
-    "https://www.youtube.com/watch?v=WO5MCOvty9U",
-    "https://www.youtube.com/watch?v=2Yy9RP6HQh0",
-    "https://www.youtube.com/watch?v=OjWFxcEIgUQ",
-    "https://www.youtube.com/watch?v=8eXQzC-uvdY",
-    "https://www.youtube.com/watch?v=I-tncbLJS60",
-    "https://www.youtube.com/watch?v=2a9pFnk0lmE",
-    "https://www.youtube.com/watch?v=2mztrtfFFos",
-    "https://www.youtube.com/watch?v=Ecp6EVhQ5vg"
   ];
 
   const sendMusic = schedule.scheduleJob(
@@ -207,6 +267,12 @@ const processCommand = async receivedMessage => {
   if (primaryCommand === "HYMN") {
     return receivedMessage.channel.send(
       `https://www.youtube.com/watch?v=hddop73zYoc`
+    );
+  }
+
+  if (primaryCommand === "MUZYKA") {
+    return receivedMessage.channel.send(
+      `${mobbynArray[Math.floor(Math.random() * mobbynArray.length)]}`
     );
   }
 
