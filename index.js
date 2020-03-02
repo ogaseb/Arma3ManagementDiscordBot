@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { Client } = require("discord.js");
 const { orderBy } = require("lodash");
-const { getHours, getMinutes } = require("date-fns");
+const schedule = require("node-schedule");
 const { regexes, filteredRegexes } = require("./helpers/helpers");
 const {
   addWixxaUser,
@@ -32,9 +32,9 @@ client.on("ready", async () => {
   });
 
   const statusArray = [
-    { status: "ROBIENIE WIXXY", type: "GAMING" },
+    { status: "WIXXA MAKER", type: "GAMING" },
     { status: "ULANE KURWY", type: "STREAMING" },
-    { status: "PATOSTREAM KOCIOŁ PANORAMIKSA", type: "WATCHING" }
+    { status: "PATOSTREAM", type: "WATCHING" }
   ];
 
   const mobbynArray = [
@@ -66,18 +66,17 @@ client.on("ready", async () => {
     "https://www.youtube.com/watch?v=DLfvaysoZj8",
     "https://www.youtube.com/watch?v=WO5MCOvty9U",
     "https://www.youtube.com/watch?v=2Yy9RP6HQh0",
-    "https://www.youtube.com/watch?v=OjWFxcEIgUQ"
+    "https://www.youtube.com/watch?v=OjWFxcEIgUQ",
+    "https://www.youtube.com/watch?v=8eXQzC-uvdY",
+    "https://www.youtube.com/watch?v=I-tncbLJS60",
+    "https://www.youtube.com/watch?v=2a9pFnk0lmE",
+    "https://www.youtube.com/watch?v=2mztrtfFFos",
+    "https://www.youtube.com/watch?v=Ecp6EVhQ5vg"
   ];
 
-  console.log(getHours(new Date()), getMinutes(new Date()));
-
-  setInterval(async () => {
-    const randomNumber = Math.floor(Math.random() * statusArray.length);
-    await client.user.setActivity(statusArray[randomNumber].status, {
-      type: statusArray[randomNumber].type
-    });
-
-    if (getHours(new Date()) === 18 && getMinutes(new Date()) === 0) {
+  const sendMusic = schedule.scheduleJob(
+    { hour: 14, minute: 30, dayOfWeek: 0 },
+    async () => {
       await client.channels
         .get(process.env.CHANNEL_ID)
         .send(
@@ -86,7 +85,13 @@ client.on("ready", async () => {
           }`
         );
     }
-    console.log("ping");
+  );
+
+  setInterval(async () => {
+    const randomNumber = Math.floor(Math.random() * statusArray.length);
+    await client.user.setActivity(statusArray[randomNumber].status, {
+      type: statusArray[randomNumber].type
+    });
   }, 1000 * 60);
 });
 
@@ -106,7 +111,6 @@ client.on("guildMemberUpdate", async receivedMessage => {
   const guild = client.guilds.get(process.env.GUILD_ID);
   const role = guild.roles.get(process.env.USER_ROLE_ID);
   const user = role.members.get(receivedMessage.user.id);
-  console.log(user);
   if (user && user.roles.has(process.env.USER_ROLE_ID)) {
     const obj = {
       discordId: user.id,
@@ -119,7 +123,8 @@ client.on("guildMemberUpdate", async receivedMessage => {
       "USIĄDŹ I DUPNIJ SE LOLKA CZŁOWIEKU",
       "KORZYSTAJ Z MŁYNU MĄDRZE",
       "SKOSZTUJ WIXY",
-      "NO ELO"
+      "NO ELO",
+      "CZAS ROZPOCZĄC WIXE!"
     ];
     await addWixxaUser(obj);
     await client.channels
@@ -201,7 +206,7 @@ const processCommand = async receivedMessage => {
 
   if (primaryCommand === "HYMN") {
     return receivedMessage.channel.send(
-      `https://www.youtube.com/watch?v=baRjEiOD2_c`
+      `https://www.youtube.com/watch?v=hddop73zYoc`
     );
   }
 
@@ -256,7 +261,7 @@ const processCommand = async receivedMessage => {
             foundArgsObj.NUMBER < 0 ? `KARNE` : `BONUSOWE`
           } PUNKTY MLYNNU W ILOŚCI \`${foundArgsObj.NUMBER}\` ZA ${
             foundArgsObj.CONTENT
-          } W SUMIE TO MASZ ICH JUŻ \`${newUser[1][0].dataValues.wixxaPoints}\``
+          } AKTUALNIE POSIADASZ \`${newUser[1][0].dataValues.wixxaPoints}\``
         );
     } catch (e) {
       console.log(e);
@@ -266,11 +271,20 @@ const processCommand = async receivedMessage => {
 
 const processText = async receivedMessage => {
   const message = receivedMessage.content.split(" ");
+  const errorMessages = user => {
+    const messages = [
+      `NO TO LECĄ KARNE PUNKTY <@!${user}> REGULAMIN SIE KLANIA`,
+      `ILE RAZY MAM CI KURWA ZWRACAC UWAGE <@!${user}>? UBIJAMY PUNKTY`,
+      `PISZE GLOSNIEJ KURWA BO NIKT CIE NIE SLYSZY <@!${user}>`
+    ];
+
+    return messages[Math.floor(Math.random() * messages.length)];
+  };
   for (const item of message) {
     if (!item.match(regexes.MENTION) || !item.match(regexes.LINK)) {
-      if (!!item.match(regexes.LOWERCASE)) {
+      if (!item.match(regexes.LOWERCASE)) {
         receivedMessage.channel.send(
-          `NO TO LECĄ KARNE PUNKTY MLYNNU <@${receivedMessage.member.user.id}> REGULAMIN SIE KLANIA`
+          errorMessages(receivedMessage.member.user.id)
         );
         const user = await getWixxaUser(receivedMessage.member.user.id);
         user.dataValues.wixxaPoints -= 1;

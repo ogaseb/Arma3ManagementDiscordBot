@@ -6,7 +6,7 @@ const regexes = {
   MENTION: /(<[^]*[>$])/gm,
   EXTRACT_MENTION_ID: /(?<=<@!)(.*)(?=>)/gm,
   LINK: /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/gm,
-  LOWERCASE: /^[a-z]+$/gm
+  LOWERCASE: /^[A-Z]*$/gm
 };
 
 function filteredRegexes(array) {
