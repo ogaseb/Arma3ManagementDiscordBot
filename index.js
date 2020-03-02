@@ -336,7 +336,12 @@ const processCommand = async receivedMessage => {
 };
 
 const processText = async receivedMessage => {
+  if (!receivedMessage.content) {
+    return;
+  }
+  console.log(receivedMessage.content);
   const message = receivedMessage.content.split(" ");
+
   const errorMessages = user => {
     const messages = [
       `NO TO LECĄ KARNE PUNKTY <@!${user}> REGULAMIN SIE KLANIA`,
@@ -346,6 +351,7 @@ const processText = async receivedMessage => {
 
     return messages[Math.floor(Math.random() * messages.length)];
   };
+
   for (const item of message) {
     if (!item.match(regexes.MENTION) || !item.match(regexes.LINK)) {
       if (!item.match(regexes.LOWERCASE)) {
