@@ -353,16 +353,16 @@ const processText = async receivedMessage => {
   };
 
   for (const item of message) {
-    if (!item.match(regexes.MENTION) || !item.match(regexes.LINK)) {
-      if (!item.match(regexes.LOWERCASE)) {
-        receivedMessage.channel.send(
-          errorMessages(receivedMessage.member.user.id)
-        );
-        const user = await getWixxaUser(receivedMessage.member.user.id);
-        user.dataValues.wixxaPoints -= 1;
-        await updateWixxaPoints(user);
-        return;
-      }
+    if (item.match(regexes.MENTION)) continue;
+    if (item.match(regexes.LINK)) continue;
+    if (!item.match(regexes.LOWERCASE)) {
+      receivedMessage.channel.send(
+        errorMessages(receivedMessage.member.user.id)
+      );
+      const user = await getWixxaUser(receivedMessage.member.user.id);
+      user.dataValues.wixxaPoints -= 1;
+      await updateWixxaPoints(user);
+      return;
     }
   }
 };
