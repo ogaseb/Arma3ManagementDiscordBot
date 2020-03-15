@@ -134,18 +134,15 @@ client.on("ready", async () => {
     { status: "PATOSTREAM", type: "WATCHING" }
   ];
 
-  const sendMusic = schedule.scheduleJob(
-    { hour: 14, minute: 30, dayOfWeek: 0 },
-    async () => {
-      await client.channels
-        .get(process.env.CHANNEL_ID)
-        .send(
-          `@everyone ELO DZISIAJ W MLYNNIE GRAMY ${
-            mobbynArray[Math.floor(Math.random() * mobbynArray.length)]
-          }`
-        );
-    }
-  );
+  const sendMusic = schedule.scheduleJob({ hour: 18, minute: 0 }, async () => {
+    return client.channels
+      .get(process.env.CHANNEL_ID)
+      .send(
+        `@everyone ELO DZISIAJ W MLYNNIE GRAMY ${
+          mobbynArray[Math.floor(Math.random() * mobbynArray.length)]
+        }`
+      );
+  });
 
   setInterval(async () => {
     const randomNumber = Math.floor(Math.random() * statusArray.length);
