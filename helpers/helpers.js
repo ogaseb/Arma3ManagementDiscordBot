@@ -18,7 +18,20 @@ function filteredRegexes(array) {
     }, {});
 }
 
+function checkIfDM(receivedMessage) {
+  return receivedMessage.channel.type === "dm";
+}
+
+function validatePermissions(receivedMessage) {
+  if (!checkIfDM(receivedMessage)) {
+    return !!receivedMessage.member.roles.some(r =>
+      process.env.BOT_PERMISSIONS_ROLES.includes(r.name)
+    );
+  }
+}
+
 module.exports = {
   regexes,
-  filteredRegexes
+  checkIfDM,
+  validatePermissions
 };
