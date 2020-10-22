@@ -1,6 +1,6 @@
 const regexes = {
-  ARGUMENTS: /\b\w*WIXA|ZASADY|RANKING|INIT|HYMN|ID|MUZYKA\w*\b|-?[0-9]\d*(\.\d+)?|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“|(<[^]*[>$])/gm,
-  COMMANDS: /\b\w*WIXA|ZASADY|RANKING|INIT|HYMN|ID|MUZYKA\w*\b/gm,
+  ARGUMENTS: /\b\w*parse|mission\w*\b|-?[0-9]\d*(\.\d+)?|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“|(<[^]*[>$])/gm,
+  COMMANDS: /\b\w*parse|mission\w*\b/gm,
   CONTENT: /"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“/gm,
   NUMBER: /^(?!.*<@)-?[0-9]\d*(\.\d+)?/gm,
   MENTION: /(<[^]*[>$])/gm,
