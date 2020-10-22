@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "wixxaGuard",
+      name: "WorldTensionBot",
       script: "./index.js",
       instances: "1",
       watch: true,
