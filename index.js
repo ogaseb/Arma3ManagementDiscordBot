@@ -84,6 +84,17 @@ const processCommand = async receivedMessage => {
   if (primaryCommand === "parse") {
     if (validatePermissions(receivedMessage)) {
       const toGetFileName = receivedMessage.attachments.first().url.split("/");
+      const lastForExtension = toGetFileName[toGetFileName.length - 1].split(
+        "."
+      );
+      const extension = lastForExtension[lastForExtension.length - 1];
+
+      if (extension !== "html") {
+        return receivedMessage.channel.send(
+          `Myślisz ze jesteś cwany? Preset wrzucaj a nie swoje nudesy xD`
+        );
+      }
+
       const fileName = toGetFileName[toGetFileName.length - 1];
       const file = await axios.get(receivedMessage.attachments.first().url);
 
@@ -153,12 +164,25 @@ const processCommand = async receivedMessage => {
           );
         }
       );
+    } else {
+      await receivedMessage.channel.send(
+        `Nie masz uprawnień do korzystania z tego!`
+      );
     }
   }
 
   if (primaryCommand === "mission") {
     if (validatePermissions(receivedMessage)) {
       const toGetFileName = receivedMessage.attachments.first().url.split("/");
+      const lastForExtension = toGetFileName[toGetFileName.length - 1].split(
+        "."
+      );
+      const extension = lastForExtension[lastForExtension.length - 1];
+      if (extension !== "pbo") {
+        return receivedMessage.channel.send(
+          `Myślisz ze jesteś cwany? Misje wrzucaj a nie swoje nudesy xD`
+        );
+      }
       const fileName = toGetFileName[toGetFileName.length - 1];
       // const file = await axios.get(receivedMessage.attachments.first().url)
       const response = await axios({
@@ -218,6 +242,10 @@ const processCommand = async receivedMessage => {
           `Jest w pytke. Misyja jest już na serwie!`
         );
       });
+    } else {
+      await receivedMessage.channel.send(
+        `Nie masz uprawnień do korzystania z tego!`
+      );
     }
   }
 };
