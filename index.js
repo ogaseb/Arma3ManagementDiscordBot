@@ -184,12 +184,12 @@ const processCommand = async receivedMessage => {
         );
       }
       const fileName = toGetFileName[toGetFileName.length - 1];
-      // const file = await axios.get(receivedMessage.attachments.first().url)
       const response = await axios({
         method: "get",
         url: receivedMessage.attachments.first().url,
         responseType: "stream"
       });
+
       const total = response.headers["content-length"];
       let bar = progress({
         width: 50,
