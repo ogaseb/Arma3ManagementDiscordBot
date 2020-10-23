@@ -52,9 +52,10 @@ module.exports.sendMission = async function(receivedMessage) {
 
       await client.cd("137.74.4.131_2302/mpmissions");
       client.trackProgress(async info => {
-        const msg = await receivedMessage.channel.messages
-          .fetch({ around: loading.id, limit: 1 })
-          .first();
+        const msg = await receivedMessage.channel.messages.fetch({
+          around: loading.id,
+          limit: 1
+        });
         const fetchedMsg = msg.first();
         await fetchedMsg.edit(
           `${bar(info.bytesOverall)} (${info.bytesOverall}/${total}) bytes`

@@ -3,6 +3,7 @@ const { Client } = require("discord.js");
 const { regexes } = require("./helpers/helpers");
 const cron = require("node-cron");
 const BattleNode = require("battle-node");
+const { restartServer } = require("./commands/restart-server/restart-server");
 const { setMission } = require("./commands/set_mission/set_mission");
 const { kickUser } = require("./commands/kick/kick");
 const { sayToUsers } = require("./commands/say/say");
@@ -162,11 +163,6 @@ const processCommand = async receivedMessage => {
   }
 
   if (primaryCommand === "restart-server") {
-    return kickUser(
-      receivedMessage,
-      bnode,
-      messageArguments[0].replace(/['"]+/g, ""),
-      messageArguments[1]
-    );
+    return restartServer(receivedMessage, bnode);
   }
 };
