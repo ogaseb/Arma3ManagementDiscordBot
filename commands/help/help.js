@@ -114,5 +114,6 @@ module.exports.sendHelp = function(receivedMessage, destination) {
         delete: "🗑"
       })
       .setTimeout(600000)
+      .setDeleteOnTimeout(true)
   );
 };
