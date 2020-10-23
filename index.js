@@ -32,8 +32,9 @@ client.on("ready", async () => {
 
   const statusArray = [
     { status: "DRAGO GEJMING", type: "GAMING" },
-    { status: "MALPY GRAJO", type: "STREAMING" },
-    { status: "ES", type: "WATCHING" }
+    { status: "MALPY TUGETER STRONK", type: "STREAMING" },
+    { status: "ES", type: "WATCHING" },
+    { status: "POGCZAMP WIDZOWIE", type: "STREAMING" }
   ];
 
   setInterval(async () => {
@@ -45,6 +46,18 @@ client.on("ready", async () => {
 
   cron.schedule(
     "30 17 * * 2,4",
+    async () => {
+      await client.channels
+        .get("753735965142417420")
+        .send(
+          `<@753999685437489234> misja za pół godziny! Zbierać się powoli!`
+        );
+    },
+    {}
+  );
+
+  cron.schedule(
+    "30 16 * * 6",
     async () => {
       await client.channels
         .get("753735965142417420")
