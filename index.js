@@ -39,8 +39,10 @@ void (async function() {
     });
 
     bnode.on("message", async function(message) {
-      console.log(message);
-      await client.channels.cache.get(process.env.BOT_LOGS_ID).send(message);
+      console.log(message.toString().replace(regexes.IPS, "x.x.x.x"));
+      await client.channels.cache
+        .get(process.env.BOT_LOGS_ID)
+        .send(message.toString().replace(regexes.IPS, "x.x.x.x"));
     });
 
     setInterval(async function() {
