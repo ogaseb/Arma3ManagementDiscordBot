@@ -5,15 +5,48 @@ const { Client } = require("discord.js");
 const { regexes } = require("./helpers/helpers");
 const axios = require("axios");
 const ftp = require("basic-ftp");
-const progress = require("progress-string");
 const cron = require("node-cron");
+const progress = require("progress-string");
 const { validatePermissions } = require("./helpers/helpers");
+const BattleNode = require("battle-node");
 
 const client = new Client();
 
 void (async function() {
   try {
     await client.login(process.env.BOT_TOKEN);
+
+    const config = {
+      ip: process.env.RCON_IP,
+      port: process.env.RCON_PORT,
+      rconPassword: process.env.RCON_PASSWORD
+    };
+
+    const bnode = new BattleNode(config);
+    bnode.login();
+
+    bnode.on("login", (err, success) => {
+      if (err) {
+        console.log("Unable to connect to server.");
+      }
+
+      if (success === true) {
+        console.log("Logged in RCON successfully.");
+      } else if (success === false) {
+        console.log("RCON login failed! (password may be incorrect)");
+      }
+    });
+
+    setInterval(async function() {
+      bnode.sendCommand("players", async players => {
+        let split = "";
+        const player = players.split("\n");
+        split = player[player.length - 1].split(" ")[0].split("(")[1];
+        await client.user.setActivity(`graczy na serwerze: ${split}`, {
+          type: "WATCHING"
+        });
+      });
+    }, 1000);
   } catch (e) {
     console.log(e);
   }
@@ -29,20 +62,6 @@ client.on("ready", async () => {
       console.log(` -- ${channel.name} (${channel.type}) - ${channel.id}`);
     });
   });
-
-  const statusArray = [
-    { status: "DRAGO GEJMING", type: "GAMING" },
-    { status: "MALPY TUGETER STRONK", type: "STREAMING" },
-    { status: "ES", type: "WATCHING" },
-    { status: "POGCZAMP WIDZOWIE", type: "STREAMING" }
-  ];
-
-  setInterval(async () => {
-    const randomNumber = Math.floor(Math.random() * statusArray.length);
-    await client.user.setActivity(statusArray[randomNumber].status, {
-      type: statusArray[randomNumber].type
-    });
-  }, 5000 * 60);
 
   cron.schedule(
     "30 17 * * 2,4",
