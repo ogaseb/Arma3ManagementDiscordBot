@@ -75,6 +75,7 @@ client.on("ready", async () => {
       if (success === true) {
         console.log("Logged in RCON successfully.");
       } else if (success === false) {
+        bnode.login();
         console.log("RCON login failed! (password may be incorrect)");
       }
     });
@@ -96,6 +97,12 @@ client.on("ready", async () => {
         });
       });
     }, 10000);
+
+    setInterval(() => {
+      if (!bnode.connected) {
+        bnode.login();
+      }
+    }, 1000);
 
     bnode.on("disconnected", async function() {
       bnode.login();
