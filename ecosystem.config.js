@@ -4,7 +4,8 @@ module.exports = {
       name: "WorldTensionBot",
       script: "./index.js",
       instances: "1",
-      watch: true,
+      exec_mode: "fork",
+      watch: false,
       env: {
         NODE_ENV: "development"
       },
