@@ -15,12 +15,6 @@ const { sendMission } = require("./commands/mission/mission");
 const { sendHelp } = require("./commands/help/help");
 
 const client = new Client();
-const config = {
-  ip: process.env.RCON_IP,
-  port: process.env.RCON_PORT,
-  rconPassword: process.env.RCON_PASSWORD
-};
-const bnode = new BattleNode(config);
 
 void (async function() {
   try {
@@ -66,13 +60,23 @@ client.on("ready", async () => {
   );
 
   try {
+    const config = {
+      ip: process.env.RCON_IP,
+      port: process.env.RCON_PORT,
+      rconPassword: process.env.RCON_PASSWORD
+    };
+    const bnode = new BattleNode(config);
     bnode.login();
-    bnode.on("login", (err, success) => {
+    bnode.on("login", async (err, success) => {
       if (err) {
         console.log("Unable to connect to server.");
       }
 
       if (success === true) {
+        bnode.connected = true;
+        await client.channels.cache
+          .get(process.env.BOT_LOGS_ID)
+          .send("Logged in RCON successfully.");
         console.log("Logged in RCON successfully.");
       } else if (success === false) {
         bnode.login();
@@ -105,10 +109,11 @@ client.on("ready", async () => {
     }, 1000);
 
     bnode.on("disconnected", async function() {
+      bnode.connected = false;
       bnode.login();
       await client.channels.cache
         .get(process.env.BOT_LOGS_ID)
-        .send("lost connection to rcon... reconnecting!");
+        .send("lost connection to rcon reconnecting...");
     });
   } catch (e) {
     console.log(e);
