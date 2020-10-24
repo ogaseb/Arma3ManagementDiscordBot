@@ -91,6 +91,17 @@ module.exports.sendHelp = function(receivedMessage, destination) {
       .addField("Przykład: ", "```" + "$restart-server```")
   );
 
+  embeds.push(
+    new MessageEmbed()
+      .addField("**KOMENDA**: ", "```reassign```")
+      .addField(
+        "Description",
+        "```reassign - zacznij od początku i przypisz role graczom```"
+      )
+      .addField("Komenda: ", "```" + "$reassign```")
+      .addField("Przykład: ", "```" + "$reassign```")
+  );
+
   return (
     new Embeds()
       .setArray(embeds)
@@ -113,6 +124,9 @@ module.exports.sendHelp = function(receivedMessage, destination) {
         forward: "▶",
         delete: "🗑"
       })
+      .setDescription(
+        "**WAŻNE!!!** \n\n jeśli w danej komendzie w przykładzie pokazane są cudzysłowy należy zawrzeć wiadomość własnie w nich! Inaczej komenda nie zadziała! \n"
+      )
       .setTimeout(600000)
       .setDeleteOnTimeout(true)
   );

@@ -3,6 +3,7 @@ const { Client } = require("discord.js");
 const { regexes } = require("./helpers/helpers");
 const cron = require("node-cron");
 const BattleNode = require("battle-node");
+const { reassignRoles } = require("./commands/reassign/reassign");
 const { restartServer } = require("./commands/restart-server/restart-server");
 const { setMission } = require("./commands/set_mission/set_mission");
 const { kickUser } = require("./commands/kick/kick");
@@ -20,11 +21,12 @@ const config = {
   rconPassword: process.env.RCON_PASSWORD
 };
 const bnode = new BattleNode(config);
-bnode.login();
 
 void (async function() {
   try {
     await client.login(process.env.BOT_TOKEN);
+    console.log(bnode);
+    bnode.login();
 
     bnode.on("login", (err, success) => {
       if (err) {
@@ -55,6 +57,14 @@ void (async function() {
         });
       });
     }, 10000);
+
+    bnode.on("disconnected", async function() {
+      bnode.login();
+      console.log("RCON server disconnected. Reconnecting!");
+      await client.channels.cache
+        .get(process.env.BOT_LOGS_ID)
+        .send("lost connection to rcon... reconnecting!");
+    });
   } catch (e) {
     console.log(e);
   }
@@ -141,30 +151,21 @@ const processCommand = async receivedMessage => {
   }
 
   if (primaryCommand === "set-mission") {
-    return setMission(
-      receivedMessage,
-      bnode,
-      messageArguments[0].replace(/['"]+/g, "")
-    );
+    return setMission(receivedMessage, bnode, messageArguments);
   }
 
   if (primaryCommand === "say") {
-    return sayToUsers(
-      receivedMessage,
-      bnode,
-      messageArguments[0].replace(/['"]+/g, "")
-    );
+    return sayToUsers(receivedMessage, bnode, messageArguments);
   }
   if (primaryCommand === "kick") {
-    return kickUser(
-      receivedMessage,
-      bnode,
-      messageArguments[0].replace(/['"]+/g, ""),
-      messageArguments[1]
-    );
+    return kickUser(receivedMessage, bnode, messageArguments);
   }
 
   if (primaryCommand === "restart-server") {
     return restartServer(receivedMessage, bnode);
+  }
+
+  if (primaryCommand === "reassign") {
+    return reassignRoles(receivedMessage, bnode);
   }
 };
