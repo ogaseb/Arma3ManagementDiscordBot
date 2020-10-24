@@ -67,6 +67,8 @@ client.on("ready", async () => {
     };
     const bnode = new BattleNode(config);
     bnode.login();
+
+    let interval;
     bnode.on("login", async (err, success) => {
       if (err) {
         console.log("Unable to connect to server.");
@@ -74,6 +76,13 @@ client.on("ready", async () => {
 
       if (success === true) {
         bnode.connected = true;
+        if (interval) clearInterval(interval);
+        interval = setInterval(() => {
+          if (!bnode.connected) {
+            bnode.login();
+          }
+        }, 1000);
+
         await client.channels.cache
           .get(process.env.BOT_LOGS_ID)
           .send("Logged in RCON successfully.");
@@ -102,15 +111,8 @@ client.on("ready", async () => {
       });
     }, 10000);
 
-    setInterval(() => {
-      if (!bnode.connected) {
-        bnode.login();
-      }
-    }, 1000);
-
     bnode.on("disconnected", async function() {
       bnode.connected = false;
-      bnode.login();
       await client.channels.cache
         .get(process.env.BOT_LOGS_ID)
         .send("lost connection to rcon reconnecting...");
