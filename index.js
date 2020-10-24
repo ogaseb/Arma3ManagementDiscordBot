@@ -15,6 +15,13 @@ const { sendMission } = require("./commands/mission/mission");
 const { sendHelp } = require("./commands/help/help");
 
 const client = new Client();
+const config = {
+  ip: process.env.RCON_IP,
+  port: process.env.RCON_PORT,
+  rconPassword: process.env.RCON_PASSWORD
+};
+let bnode = {};
+let interval, timeout;
 
 void (async function() {
   try {
@@ -24,12 +31,61 @@ void (async function() {
   }
 })();
 
-const config = {
-  ip: process.env.RCON_IP,
-  port: process.env.RCON_PORT,
-  rconPassword: process.env.RCON_PASSWORD
+const battleEye = () => {
+  bnode = new BattleNode(config);
+  if (interval) clearInterval(interval);
+  try {
+    bnode.login();
+    bnode.on("login", async (err, success) => {
+      if (err) {
+        console.log("Unable to connect to server.");
+        timeout = setTimeout(async () => {
+          battleEye();
+        }, 10000);
+      }
+
+      if (success === true) {
+        if (timeout) {
+          clearTimeout(timeout);
+          timeout = null;
+        }
+        interval = setInterval(async function() {
+          bnode.sendCommand("players", async players => {
+            let split = "";
+            const player = players.split("\n");
+            split = player[player.length - 1].split(" ")[0].split("(")[1];
+            await client.user.setActivity(`graczy na serwerze: ${split}`, {
+              type: "WATCHING"
+            });
+          });
+        }, 10000);
+
+        await client.channels.cache
+          .get(process.env.BOT_LOGS_ID)
+          .send("Logged in RCON successfully.");
+        console.log("Logged in RCON successfully.");
+      } else if (success === false) {
+        console.log("RCON login failed! (password may be incorrect)");
+      }
+    });
+
+    bnode.on("message", async function(message) {
+      console.log(message.toString().replace(regexes.IPS, "x.x.x.x"));
+      await client.channels.cache
+        .get(process.env.BOT_LOGS_ID)
+        .send(message.toString().replace(regexes.IPS, "x.x.x.x"));
+    });
+
+    bnode.on("disconnected", async function() {
+      if (interval) clearInterval(interval);
+      timeout = setTimeout(async () => {
+        battleEye();
+      }, 10000);
+    });
+  } catch (e) {
+    console.log(e);
+  }
 };
-const bnode = new BattleNode(config);
 
 client.on("ready", async () => {
   console.log("On Discord!");
@@ -65,61 +121,7 @@ client.on("ready", async () => {
     },
     {}
   );
-
-  try {
-    bnode.login();
-    let interval;
-    bnode.on("login", async (err, success) => {
-      if (err) {
-        console.log("Unable to connect to server.");
-      }
-
-      if (success === true) {
-        bnode.connected = true;
-        if (interval) clearInterval(interval);
-        interval = setInterval(() => {
-          if (!bnode.connected) {
-            bnode.login();
-          }
-        }, 1000);
-
-        await client.channels.cache
-          .get(process.env.BOT_LOGS_ID)
-          .send("Logged in RCON successfully.");
-        console.log("Logged in RCON successfully.");
-      } else if (success === false) {
-        bnode.login();
-        console.log("RCON login failed! (password may be incorrect)");
-      }
-    });
-
-    bnode.on("message", async function(message) {
-      console.log(message.toString().replace(regexes.IPS, "x.x.x.x"));
-      await client.channels.cache
-        .get(process.env.BOT_LOGS_ID)
-        .send(message.toString().replace(regexes.IPS, "x.x.x.x"));
-    });
-
-    setInterval(async function() {
-      bnode.sendCommand("players", async players => {
-        let split = "";
-        const player = players.split("\n");
-        split = player[player.length - 1].split(" ")[0].split("(")[1];
-        await client.user.setActivity(`graczy na serwerze: ${split}`, {
-          type: "WATCHING"
-        });
-      });
-    }, 10000);
-
-    bnode.on("disconnected", async function() {
-      bnode.connected = false;
-      await client.channels.cache
-        .get(process.env.BOT_LOGS_ID)
-        .send("lost connection to rcon reconnecting...");
-    });
-  } catch (e) {
-    console.log(e);
-  }
+  battleEye();
 });
 
 client.on("message", receivedMessage => {
