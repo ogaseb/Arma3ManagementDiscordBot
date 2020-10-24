@@ -24,6 +24,13 @@ void (async function() {
   }
 })();
 
+const config = {
+  ip: process.env.RCON_IP,
+  port: process.env.RCON_PORT,
+  rconPassword: process.env.RCON_PASSWORD
+};
+const bnode = new BattleNode(config);
+
 client.on("ready", async () => {
   console.log("On Discord!");
   console.log("Connected as " + client.user.tag);
@@ -60,14 +67,7 @@ client.on("ready", async () => {
   );
 
   try {
-    const config = {
-      ip: process.env.RCON_IP,
-      port: process.env.RCON_PORT,
-      rconPassword: process.env.RCON_PASSWORD
-    };
-    const bnode = new BattleNode(config);
     bnode.login();
-
     let interval;
     bnode.on("login", async (err, success) => {
       if (err) {
