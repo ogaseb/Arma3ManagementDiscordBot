@@ -25,8 +25,7 @@ const bnode = new BattleNode(config);
 void (async function() {
   try {
     await client.login(process.env.BOT_TOKEN);
-    console.log(bnode);
-    // bnode.login();
+    bnode.login();
 
     bnode.on("login", (err, success) => {
       if (err) {
@@ -59,7 +58,7 @@ void (async function() {
     }, 10000);
 
     bnode.on("disconnected", async function() {
-      // bnode.login();
+      bnode.login();
       console.log("RCON server disconnected. Reconnecting!");
       await client.channels.cache
         .get(process.env.BOT_LOGS_ID)
