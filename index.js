@@ -25,45 +25,6 @@ const bnode = new BattleNode(config);
 void (async function() {
   try {
     await client.login(process.env.BOT_TOKEN);
-    bnode.login();
-
-    bnode.on("login", (err, success) => {
-      if (err) {
-        console.log("Unable to connect to server.");
-      }
-
-      if (success === true) {
-        console.log("Logged in RCON successfully.");
-      } else if (success === false) {
-        console.log("RCON login failed! (password may be incorrect)");
-      }
-    });
-
-    bnode.on("message", async function(message) {
-      console.log(message.toString().replace(regexes.IPS, "x.x.x.x"));
-      await client.channels.cache
-        .get(process.env.BOT_LOGS_ID)
-        .send(message.toString().replace(regexes.IPS, "x.x.x.x"));
-    });
-
-    setInterval(async function() {
-      bnode.sendCommand("players", async players => {
-        let split = "";
-        const player = players.split("\n");
-        split = player[player.length - 1].split(" ")[0].split("(")[1];
-        await client.user.setActivity(`graczy na serwerze: ${split}`, {
-          type: "WATCHING"
-        });
-      });
-    }, 10000);
-
-    bnode.on("disconnected", async function() {
-      bnode.login();
-      console.log("RCON server disconnected. Reconnecting!");
-      await client.channels.cache
-        .get(process.env.BOT_LOGS_ID)
-        .send("lost connection to rcon... reconnecting!");
-    });
   } catch (e) {
     console.log(e);
   }
@@ -103,6 +64,48 @@ client.on("ready", async () => {
     },
     {}
   );
+
+  try {
+    bnode.login();
+    bnode.on("login", (err, success) => {
+      if (err) {
+        console.log("Unable to connect to server.");
+      }
+
+      if (success === true) {
+        console.log("Logged in RCON successfully.");
+      } else if (success === false) {
+        console.log("RCON login failed! (password may be incorrect)");
+      }
+    });
+
+    bnode.on("message", async function(message) {
+      console.log(message.toString().replace(regexes.IPS, "x.x.x.x"));
+      await client.channels.cache
+        .get(process.env.BOT_LOGS_ID)
+        .send(message.toString().replace(regexes.IPS, "x.x.x.x"));
+    });
+
+    setInterval(async function() {
+      bnode.sendCommand("players", async players => {
+        let split = "";
+        const player = players.split("\n");
+        split = player[player.length - 1].split(" ")[0].split("(")[1];
+        await client.user.setActivity(`graczy na serwerze: ${split}`, {
+          type: "WATCHING"
+        });
+      });
+    }, 10000);
+
+    bnode.on("disconnected", async function() {
+      bnode.login();
+      await client.channels.cache
+        .get(process.env.BOT_LOGS_ID)
+        .send("lost connection to rcon... reconnecting!");
+    });
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 client.on("message", receivedMessage => {
