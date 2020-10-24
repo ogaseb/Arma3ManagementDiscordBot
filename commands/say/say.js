@@ -5,15 +5,17 @@ module.exports.sayToUsers = async function(
   bnode,
   messageArguments
 ) {
+  console.log(messageArguments);
   const message = messageArguments[0];
 
   if (validateAdmin(receivedMessage)) {
-    if (!regexes.MESSAGE.test(message)) {
+    if (!message) {
       return await receivedMessage.channel.send(
         `Komenda jest źle wpisana! (wiadomość)`
       );
+    } else {
+      bnode.sendCommand(`say -1 ${message.replace(/['"]+/g, "")}`);
     }
-    bnode.sendCommand(`say -1 ${message.replace(/['"]+/g, "")}`);
   } else {
     await receivedMessage.channel.send(
       `Nie masz uprawnień do korzystania z tego!`
