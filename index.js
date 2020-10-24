@@ -47,19 +47,19 @@ client.on("ready", async () => {
       await client.channels.cache
         .get("753735965142417420")
         .send(
-          `<@753999685437489234> misja za pół godziny! Zbierać się powoli!`
+          `<@!753999685437489234> misja za pół godziny! Zbierać się powoli!`
         );
     },
     {}
   );
 
   cron.schedule(
-    "30 16 * * 6",
+    "30 16 * * 7",
     async () => {
       await client.channels.cache
         .get("753735965142417420")
         .send(
-          `<@753999685437489234> misja za pół godziny! Zbierać się powoli!`
+          `<@!753999685437489234> misja za pół godziny! Zbierać się powoli!`
         );
     },
     {}
