@@ -39,12 +39,14 @@ const battleEye = () => {
     bnode.on("login", async (err, success) => {
       if (err) {
         console.log("Unable to connect to server.");
-        timeout = setTimeout(async () => {
+        return (timeout = setTimeout(async () => {
           battleEye();
-        }, 10000);
+          console.log("creating new battle class");
+        }, 5000));
       }
 
       if (success === true) {
+        console.log(timeout);
         if (timeout) {
           clearTimeout(timeout);
           timeout = null;
@@ -77,10 +79,16 @@ const battleEye = () => {
     });
 
     bnode.on("disconnected", async function() {
-      if (interval) clearInterval(interval);
-      timeout = setTimeout(async () => {
+      console.log("disconnected");
+      if (interval) {
+        clearInterval(interval);
+        interval = null;
+      }
+
+      return (timeout = setTimeout(async () => {
         battleEye();
-      }, 10000);
+        console.log("creating new battle class");
+      }, 1000));
     });
   } catch (e) {
     console.log(e);
