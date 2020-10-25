@@ -11,7 +11,9 @@ module.exports.pingServer = async function(receivedMessage) {
         .setColor("#0099ff")
         .setTitle("Pong!")
         .setDescription("Aktualne info o serwerku")
-        .setThumbnail("https://i.redd.it/567ev5bc79951.jpg")
+        .setThumbnail(
+          "https://media1.tenor.com/images/f1fed6c2dc8f0919c591e3e2bd225d09/tenor.gif?itemid=16437115"
+        )
         .addField("IP", state.connect, true)
         .addField("Ping", state.ping, true)
         .addField("\u200b", "\u200b")
