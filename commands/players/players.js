@@ -1,8 +1,8 @@
+const { validatePermissions } = require("../../helpers/helpers");
 const { regexes } = require("../../helpers/helpers");
-const { validateAdmin } = require("../../helpers/helpers");
 
 module.exports.getPlayers = async function(receivedMessage, bnode) {
-  if (validateAdmin(receivedMessage)) {
+  if (validatePermissions(receivedMessage)) {
     bnode.sendCommand("players", async players => {
       console.log(players.toString());
       receivedMessage.channel.send(

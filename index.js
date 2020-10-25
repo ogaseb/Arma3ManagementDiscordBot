@@ -86,7 +86,6 @@ const battleEye = () => {
     });
 
     bnode.on("message", async function(message) {
-      console.log(timeout);
       if (timeout) {
         clearTimeout(timeout);
         timeout = null;
@@ -147,7 +146,7 @@ client.on("ready", async () => {
       await client.channels.cache
         .get("753735965142417420")
         .send(
-          `<@!753999685437489234> misja za pół godziny! Zbierać się powoli!`
+          `<@&753999685437489234> misja za pół godziny! Zbierać się powoli!`
         );
     },
     {}
@@ -159,7 +158,7 @@ client.on("ready", async () => {
       await client.channels.cache
         .get("753735965142417420")
         .send(
-          `<@!753999685437489234> misja za pół godziny! Zbierać się powoli!`
+          `<@&753999685437489234> misja za pół godziny! Zbierać się powoli!`
         );
     },
     {}

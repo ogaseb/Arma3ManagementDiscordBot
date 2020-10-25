@@ -41,7 +41,7 @@ module.exports.sendHelp = function(receivedMessage, destination) {
       .addField("**KOMENDA**: ", "```set-mission```")
       .addField(
         "Description",
-        "```set-mission - komenda do uruchomienia konkretnej misji```"
+        "```set-mission - komenda do uruchomienia konkretnej misji na serwerze z poziomu discorda```"
       )
       .addField("Komenda: ", "```" + '$set-mission "<nazwa misji>"```')
       .addField("Przykład: ", "```" + '$set-mission "misja.Altis"```')
@@ -52,7 +52,7 @@ module.exports.sendHelp = function(receivedMessage, destination) {
       .addField("**KOMENDA**: ", "```say```")
       .addField(
         "Description",
-        "```say - dzięki tej komendzie możesz przekazać jakąś informacje graczom na serwerze, nie będąc na nim```"
+        "```say - dzięki tej komendzie możesz przekazać jakąś informacje graczom na serwerze, nawet nie wchodząc na niego, chat z gry możecie czytać an kanale <#769283784067383307>```"
       )
       .addField("Komenda: ", "```" + '$say "<wiadomosc>"```')
       .addField("Przykład: ", "```" + '$say "testowa wiadomość"```')
@@ -82,6 +82,39 @@ module.exports.sendHelp = function(receivedMessage, destination) {
 
   embeds.push(
     new MessageEmbed()
+      .addField("**KOMENDA**: ", "```ban```")
+      .addField(
+        "Description",
+        "```ban - komenda do zbanowania użytkownika z serwera```"
+      )
+      .addField("Komenda: ", "```" + '$ban "<powód>" <id> <czas w minutach>```')
+      .addField("Przykład: ", "```" + '$ban "złe zachowanie" 0 60```')
+  );
+
+  embeds.push(
+    new MessageEmbed()
+      .addField("**KOMENDA**: ", "```get-bans```")
+      .addField(
+        "Description",
+        "```get-bans - zwraca liste wszystkich zbanowanych graczy```"
+      )
+      .addField("Komenda: ", "```" + "$get-bans```")
+      .addField("Przykład: ", "```" + "$get-bans```")
+  );
+
+  embeds.push(
+    new MessageEmbed()
+      .addField("**KOMENDA**: ", "```remove-ban```")
+      .addField(
+        "Description",
+        "```remove-ban - usuwa gracza z listy zbanowanych```"
+      )
+      .addField("Komenda: ", "```" + "$remove-ban <id>```")
+      .addField("Przykład: ", "```" + "$remove-ban 0```")
+  );
+
+  embeds.push(
+    new MessageEmbed()
       .addField("**KOMENDA**: ", "```restart-server```")
       .addField(
         "Description",
@@ -96,7 +129,7 @@ module.exports.sendHelp = function(receivedMessage, destination) {
       .addField("**KOMENDA**: ", "```reassign```")
       .addField(
         "Description",
-        "```reassign - zacznij od początku i przypisz role graczom```"
+        "```reassign - zacznij misje od początku, wyrzuca wszystkich z powrotem do menu wybierania ról```"
       )
       .addField("Komenda: ", "```" + "$reassign```")
       .addField("Przykład: ", "```" + "$reassign```")
