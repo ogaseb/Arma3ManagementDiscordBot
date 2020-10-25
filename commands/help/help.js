@@ -52,7 +52,7 @@ module.exports.sendHelp = function(receivedMessage, destination) {
       .addField("**KOMENDA**: ", "```say```")
       .addField(
         "Description",
-        "```say - dzięki tej komendzie możesz przekazać jakąś informacje graczom na serwerze, nawet nie wchodząc na niego, chat z gry możecie czytać an kanale <#769283784067383307>```"
+        "```say - dzięki tej komendzie możesz przekazać jakąś informacje graczom na serwerze, nawet nie wchodząc na niego```"
       )
       .addField("Komenda: ", "```" + '$say "<wiadomosc>"```')
       .addField("Przykład: ", "```" + '$say "testowa wiadomość"```')
@@ -96,7 +96,7 @@ module.exports.sendHelp = function(receivedMessage, destination) {
       .addField("**KOMENDA**: ", "```get-bans```")
       .addField(
         "Description",
-        "```get-bans - zwraca liste wszystkich zbanowanych graczy```"
+        "```get-bans - zwraca liste wszystkich zbanowanych graczy numerek pod (#) służy do odbanowania```"
       )
       .addField("Komenda: ", "```" + "$get-bans```")
       .addField("Przykład: ", "```" + "$get-bans```")
