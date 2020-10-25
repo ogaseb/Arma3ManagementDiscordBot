@@ -32,6 +32,7 @@ void (async function() {
 })();
 
 const battleEye = () => {
+  bnode = null;
   bnode = new BattleNode(config);
   if (interval) {
     clearInterval(interval);
