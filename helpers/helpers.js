@@ -1,6 +1,6 @@
 const regexes = {
-  ARGUMENTS: /\b\w*parse|mission|help|players|get-missions|say|kick|set-mission|restart-server|reassign|ban|get-bans|remove-ban\w*\b|-?[0-9]\d*(\.\d+)?|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“|(<[^]*[>$])/gm,
-  COMMANDS: /\b\w*parse|mission|help|players|get-missions|say|kick|set-mission|restart-server|reassign|ban|get-bans|remove-ban\w*\b/gm,
+  ARGUMENTS: /\b\w*parse|mission|help|players|get-missions|say|kick|set-mission|restart-server|reassign|ban|get-bans|remove-ban|ping\w*\b|-?[0-9]\d*(\.\d+)?|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“|(<[^]*[>$])/gm,
+  COMMANDS: /\b\w*parse|mission|help|players|get-missions|say|kick|set-mission|restart-server|reassign|ban|get-bans|remove-ban|ping\w*\b/gm,
   CONTENT: /"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“/gm,
   NUMBER: /^(?!.*<@)-?[0-9]\d*(\.\d+)?/gm,
   MENTION: /(<[^]*[>$])/gm,

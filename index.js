@@ -3,6 +3,7 @@ const { Client } = require("discord.js");
 const { regexes } = require("./helpers/helpers");
 const cron = require("node-cron");
 const BattleNode = require("battle-node");
+const { pingServer } = require("./commands/ping/ping");
 const { removeBan } = require("./commands/remove_ban/remove_ban");
 const { checkIfDM } = require("./helpers/helpers");
 const { getBannedUsers } = require("./commands/get_bans/get_bans");
@@ -240,5 +241,9 @@ const processCommand = async receivedMessage => {
 
   if (primaryCommand === "reassign") {
     return reassignRoles(receivedMessage, bnode);
+  }
+
+  if (primaryCommand === "ping") {
+    return pingServer(receivedMessage);
   }
 };
