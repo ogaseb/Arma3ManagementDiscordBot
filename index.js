@@ -33,7 +33,10 @@ void (async function() {
 
 const battleEye = () => {
   bnode = new BattleNode(config);
-  if (interval) clearInterval(interval);
+  if (interval) {
+    clearInterval(interval);
+    interval = null;
+  }
   try {
     bnode.login();
     bnode.on("login", async (err, success) => {
@@ -41,12 +44,15 @@ const battleEye = () => {
         console.log("Unable to connect to server.");
         return (timeout = setTimeout(async () => {
           battleEye();
-          console.log("creating new battle class");
-        }, 5000));
+          return console.log("creating new battle class");
+        }, 10000));
       }
 
       if (success === true) {
-        console.log(timeout);
+        if (interval) {
+          clearInterval(interval);
+          interval = null;
+        }
         if (timeout) {
           clearTimeout(timeout);
           timeout = null;
@@ -62,9 +68,6 @@ const battleEye = () => {
           });
         }, 10000);
 
-        await client.channels.cache
-          .get(process.env.BOT_LOGS_ID)
-          .send("Logged in RCON successfully.");
         console.log("Logged in RCON successfully.");
       } else if (success === false) {
         console.log("RCON login failed! (password may be incorrect)");
@@ -72,7 +75,20 @@ const battleEye = () => {
     });
 
     bnode.on("message", async function(message) {
+      if (timeout) {
+        clearTimeout(timeout);
+        timeout = null;
+      }
       console.log(message.toString().replace(regexes.IPS, "x.x.x.x"));
+      const checkIfAdminLogin = message.split(" ");
+      if (
+        checkIfAdminLogin[0] === "RCon" &&
+        checkIfAdminLogin[1] === "admin" &&
+        checkIfAdminLogin[checkIfAdminLogin.length - 2] === "logged" &&
+        checkIfAdminLogin[checkIfAdminLogin.length - 1] === "in"
+      ) {
+        return;
+      }
       await client.channels.cache
         .get(process.env.BOT_LOGS_ID)
         .send(message.toString().replace(regexes.IPS, "x.x.x.x"));
@@ -84,11 +100,15 @@ const battleEye = () => {
         clearInterval(interval);
         interval = null;
       }
+      if (timeout) {
+        clearTimeout(timeout);
+        timeout = null;
+      }
 
       return (timeout = setTimeout(async () => {
         battleEye();
-        console.log("creating new battle class");
-      }, 1000));
+        return console.log("creating new battle class");
+      }, 10000));
     });
   } catch (e) {
     console.log(e);
