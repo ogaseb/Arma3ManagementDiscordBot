@@ -12,7 +12,7 @@ module.exports.restartServer = async function(receivedMessage, bnode) {
       Gamedig.query({
         type: "arma3",
         host: "137.74.4.131",
-        maxAttempts: 20
+        maxAttempts: 1000
       })
         .then(async state => {
           await receivedMessage.channel.send("Serwer powinien już działać!");
