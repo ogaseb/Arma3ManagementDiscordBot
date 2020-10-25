@@ -1,20 +1,22 @@
-const { regexes } = require("../../helpers/helpers");
 const { validateAdmin } = require("../../helpers/helpers");
-module.exports.setMission = async function(
+module.exports.removeBan = async function(
   receivedMessage,
   bnode,
   messageArguments
 ) {
-  const mission = messageArguments[0];
+  const uid = messageArguments[0];
 
   if (validateAdmin(receivedMessage)) {
-    if (!mission.match(regexes.MESSAGE)) {
+    if (isNaN(uid)) {
       return await receivedMessage.channel.send(
-        `Komenda jest źle wpisana! (nazwa misji)`
+        `Komenda jest źle wpisana! (id usera)`
       );
     }
 
-    bnode.sendCommand(`#mission ${mission}`);
+    bnode.sendCommand(`removeBan ${uid}`);
+    await receivedMessage.channel.send(
+      `Ban dla usera pod nr ${uid} został zdjęty`
+    );
   } else {
     await receivedMessage.channel.send(
       `Nie masz uprawnień do korzystania z tego!`

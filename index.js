@@ -3,6 +3,10 @@ const { Client } = require("discord.js");
 const { regexes } = require("./helpers/helpers");
 const cron = require("node-cron");
 const BattleNode = require("battle-node");
+const { removeBan } = require("./commands/remove_ban/remove_ban");
+const { checkIfDM } = require("./helpers/helpers");
+const { getBannedUsers } = require("./commands/get_bans/get_bans");
+const { banUser } = require("./commands/ban/ban");
 const { reassignRoles } = require("./commands/reassign/reassign");
 const { restartServer } = require("./commands/restart-server/restart-server");
 const { setMission } = require("./commands/set_mission/set_mission");
@@ -164,6 +168,7 @@ client.on("ready", async () => {
 });
 
 client.on("message", receivedMessage => {
+  if (checkIfDM(receivedMessage)) return;
   if (receivedMessage.author === client.user) {
     return;
   }
@@ -216,6 +221,18 @@ const processCommand = async receivedMessage => {
   }
   if (primaryCommand === "kick") {
     return kickUser(receivedMessage, bnode, messageArguments);
+  }
+
+  if (primaryCommand === "ban") {
+    return banUser(receivedMessage, bnode, messageArguments);
+  }
+
+  if (primaryCommand === "remove-ban") {
+    return removeBan(receivedMessage, bnode, messageArguments);
+  }
+
+  if (primaryCommand === "get-bans") {
+    return getBannedUsers(receivedMessage, bnode);
   }
 
   if (primaryCommand === "restart-server") {

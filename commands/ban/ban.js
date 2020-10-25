@@ -1,12 +1,14 @@
 const { regexes } = require("../../helpers/helpers");
 const { validateAdmin } = require("../../helpers/helpers");
-module.exports.kickUser = async function(
+module.exports.banUser = async function(
   receivedMessage,
   bnode,
   messageArguments
 ) {
   const reason = messageArguments[0];
   const uid = messageArguments[1];
+  const time = messageArguments[2];
+
   console.log(messageArguments, uid, reason);
   if (validateAdmin(receivedMessage)) {
     if (!reason.match(regexes.MESSAGE)) {
@@ -21,9 +23,15 @@ module.exports.kickUser = async function(
       );
     }
 
-    bnode.sendCommand(`kick ${uid} ${reason.replace(/['"]+/g, "")}`);
+    if (isNaN(time)) {
+      return await receivedMessage.channel.send(
+        `Komenda jest źle wpisana! (czas trwania w minutach)`
+      );
+    }
+
+    bnode.sendCommand(`ban ${uid} ${reason.replace(/['"]+/g, "")}`);
     await receivedMessage.channel.send(
-      `poszedł kick! powód: \`${reason}\` uid: \`${uid}\``
+      `poszedł banik! powód: \`${reason}\` uid: \`${uid}\` czas: \`${time}\``
     );
   } else {
     await receivedMessage.channel.send(
