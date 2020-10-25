@@ -20,8 +20,9 @@ const config = {
   port: process.env.RCON_PORT,
   rconPassword: process.env.RCON_PASSWORD
 };
-let bnode = {};
-let interval, timeout;
+let bnode = null;
+let interval,
+  timeout = null;
 
 void (async function() {
   try {
@@ -33,7 +34,10 @@ void (async function() {
 
 const battleEye = () => {
   bnode = null;
+  console.log(bnode);
   bnode = new BattleNode(config);
+  console.log(bnode);
+  console.log(interval);
   if (interval) {
     clearInterval(interval);
     interval = null;
@@ -44,11 +48,13 @@ const battleEye = () => {
       if (err) {
         console.log("Unable to connect to server.");
         return (timeout = setTimeout(async () => {
+          if (bnode) bnode.socket.close();
           battleEye();
           return console.log("creating new battle class");
-        }, 10000));
+        }, 15000));
       }
-
+      console.log(interval);
+      console.log(timeout);
       if (success === true) {
         if (interval) {
           clearInterval(interval);
@@ -76,6 +82,7 @@ const battleEye = () => {
     });
 
     bnode.on("message", async function(message) {
+      console.log(timeout);
       if (timeout) {
         clearTimeout(timeout);
         timeout = null;
@@ -96,6 +103,8 @@ const battleEye = () => {
     });
 
     bnode.on("disconnected", async function() {
+      console.log(interval);
+      console.log(timeout);
       console.log("disconnected");
       if (interval) {
         clearInterval(interval);
@@ -107,9 +116,10 @@ const battleEye = () => {
       }
 
       return (timeout = setTimeout(async () => {
+        if (bnode) bnode.socket.close();
         battleEye();
         return console.log("creating new battle class");
-      }, 10000));
+      }, 15000));
     });
   } catch (e) {
     console.log(e);
