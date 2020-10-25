@@ -1,5 +1,5 @@
+const { validatePermissions } = require("../../helpers/helpers");
 const { regexes } = require("../../helpers/helpers");
-const { validateAdmin } = require("../../helpers/helpers");
 module.exports.setMission = async function(
   receivedMessage,
   bnode,
@@ -7,7 +7,7 @@ module.exports.setMission = async function(
 ) {
   const mission = messageArguments[0];
 
-  if (validateAdmin(receivedMessage)) {
+  if (validatePermissions(receivedMessage)) {
     if (!mission.match(regexes.MESSAGE)) {
       return await receivedMessage.channel.send(
         `Komenda jest źle wpisana! (nazwa misji)`

@@ -8,17 +8,26 @@ module.exports.sendHelp = function(receivedMessage, destination) {
     new MessageEmbed()
       .addField("**KOMENDA**: ", "```parse```")
       .addField(
+        "dostęp",
+        "```<@&753733954737274980>, <@&753999646040522763>, <@&753999606987227157>```"
+      )
+      .addField(
         "Opis",
         "```parse -  Służy do parsowania waszych presetów z modami na liste modów, którą potem wrzucam na serwer żeby wiedział które ma sobie załadować```"
       )
       .addField("Komenda: ", "```$parse```")
       .addField("Przykład: ", "```$parse (jako komentarz do pliku)```")
   );
+
   embeds.push(
     new MessageEmbed()
       .addField("**KOMENDA**: ", "```mission```")
       .addField(
-        "Description",
+        "dostęp",
+        "```<@&753733954737274980>, <@&753999646040522763>, <@&753999606987227157>```"
+      )
+      .addField(
+        "Opis",
         "```mission - dzięki tej komendzie możecie wrzucić misje bezpośrednio z discorda na serwer. Pamiętajcie żeby plik miał rozszerzenie .pbo. Komende wpisujecie jako komentarz do pliku```"
       )
       .addField("Komenda: ", "```" + "$mission```")
@@ -29,7 +38,11 @@ module.exports.sendHelp = function(receivedMessage, destination) {
     new MessageEmbed()
       .addField("**KOMENDA**: ", "```get-missions```")
       .addField(
-        "Description",
+        "dostęp",
+        "```<@&753733954737274980>, <@&753999646040522763>, <@&753999606987227157>```"
+      )
+      .addField(
+        "Opis",
         "```get-missions - wyświetla liste wszystkich misji wrzuconych na serwer```"
       )
       .addField("Komenda: ", "```" + "$get-missions```")
@@ -40,7 +53,11 @@ module.exports.sendHelp = function(receivedMessage, destination) {
     new MessageEmbed()
       .addField("**KOMENDA**: ", "```set-mission```")
       .addField(
-        "Description",
+        "dostęp",
+        "```<@&753733954737274980>, <@&753999646040522763>, <@&753999606987227157>```"
+      )
+      .addField(
+        "Opis",
         "```set-mission - komenda do uruchomienia konkretnej misji na serwerze z poziomu discorda```"
       )
       .addField("Komenda: ", "```" + '$set-mission "<nazwa misji>"```')
@@ -49,9 +66,28 @@ module.exports.sendHelp = function(receivedMessage, destination) {
 
   embeds.push(
     new MessageEmbed()
+      .addField("**KOMENDA**: ", "```reassign```")
+      .addField(
+        "dostęp",
+        "```<@&753733954737274980>, <@&753999646040522763>, <@&753999606987227157>```"
+      )
+      .addField(
+        "Opis",
+        "```reassign - zacznij misje od początku, wyrzuca wszystkich z powrotem do menu wybierania ról```"
+      )
+      .addField("Komenda: ", "```" + "$reassign```")
+      .addField("Przykład: ", "```" + "$reassign```")
+  );
+
+  embeds.push(
+    new MessageEmbed()
       .addField("**KOMENDA**: ", "```say```")
       .addField(
-        "Description",
+        "dostęp",
+        "```<@&753733954737274980>>, <@&753999606987227157>```"
+      )
+      .addField(
+        "Opis",
         "```say - dzięki tej komendzie możesz przekazać jakąś informacje graczom na serwerze, nawet nie wchodząc na niego```"
       )
       .addField("Komenda: ", "```" + '$say "<wiadomosc>"```')
@@ -62,7 +98,11 @@ module.exports.sendHelp = function(receivedMessage, destination) {
     new MessageEmbed()
       .addField("**KOMENDA**: ", "```players```")
       .addField(
-        "Description",
+        "dostęp",
+        "```<@&753733954737274980>, <@&753999646040522763>, <@&753999606987227157>```"
+      )
+      .addField(
+        "Opis",
         "```players - komenda ta wyświetla liste graczy aktualnie znajdującym się na serwerze, służy on znalezieniu odpowiedniego id (#) gracza do skickowania/zbanowania```"
       )
       .addField("Komenda: ", "```" + "$players```")
@@ -73,7 +113,11 @@ module.exports.sendHelp = function(receivedMessage, destination) {
     new MessageEmbed()
       .addField("**KOMENDA**: ", "```kick```")
       .addField(
-        "Description",
+        "dostęp",
+        "```<@&753733954737274980>, <@&753999606987227157>```"
+      )
+      .addField(
+        "Opis",
         "```kick - komenda do kickowania użytkownika z serwera```"
       )
       .addField("Komenda: ", "```" + '$kick "<powód>" <id>```')
@@ -84,7 +128,11 @@ module.exports.sendHelp = function(receivedMessage, destination) {
     new MessageEmbed()
       .addField("**KOMENDA**: ", "```ban```")
       .addField(
-        "Description",
+        "dostęp",
+        "```<@&753733954737274980>, <@&753999606987227157>```"
+      )
+      .addField(
+        "Opis",
         "```ban - komenda do zbanowania użytkownika z serwera```"
       )
       .addField("Komenda: ", "```" + '$ban "<powód>" <id> <czas w minutach>```')
@@ -95,7 +143,11 @@ module.exports.sendHelp = function(receivedMessage, destination) {
     new MessageEmbed()
       .addField("**KOMENDA**: ", "```get-bans```")
       .addField(
-        "Description",
+        "dostęp",
+        "```<@&753733954737274980>, <@&753999606987227157>```"
+      )
+      .addField(
+        "Opis",
         "```get-bans - zwraca liste wszystkich zbanowanych graczy numerek pod (#) służy do odbanowania```"
       )
       .addField("Komenda: ", "```" + "$get-bans```")
@@ -106,9 +158,10 @@ module.exports.sendHelp = function(receivedMessage, destination) {
     new MessageEmbed()
       .addField("**KOMENDA**: ", "```remove-ban```")
       .addField(
-        "Description",
-        "```remove-ban - usuwa gracza z listy zbanowanych```"
+        "dostęp",
+        "```<@&753733954737274980>, <@&753999606987227157>```"
       )
+      .addField("Opis", "```remove-ban - usuwa gracza z listy zbanowanych```")
       .addField("Komenda: ", "```" + "$remove-ban <id>```")
       .addField("Przykład: ", "```" + "$remove-ban 0```")
   );
@@ -117,22 +170,15 @@ module.exports.sendHelp = function(receivedMessage, destination) {
     new MessageEmbed()
       .addField("**KOMENDA**: ", "```restart-server```")
       .addField(
-        "Description",
+        "dostęp",
+        "```<@&753733954737274980>, <@&753999606987227157>```"
+      )
+      .addField(
+        "Opis",
         "```restart-server - wiadomo po co, w celu zrestartowania serwera```"
       )
       .addField("Komenda: ", "```" + "$restart-server```")
       .addField("Przykład: ", "```" + "$restart-server```")
-  );
-
-  embeds.push(
-    new MessageEmbed()
-      .addField("**KOMENDA**: ", "```reassign```")
-      .addField(
-        "Description",
-        "```reassign - zacznij misje od początku, wyrzuca wszystkich z powrotem do menu wybierania ról```"
-      )
-      .addField("Komenda: ", "```" + "$reassign```")
-      .addField("Przykład: ", "```" + "$reassign```")
   );
 
   return (

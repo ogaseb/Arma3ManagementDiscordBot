@@ -1,6 +1,6 @@
-const { validateAdmin } = require("../../helpers/helpers");
+const { validatePermissions } = require("../../helpers/helpers");
 module.exports.reassignRoles = async function(receivedMessage, bnode) {
-  if (validateAdmin(receivedMessage)) {
+  if (validatePermissions(receivedMessage)) {
     bnode.sendCommand(`#reassign`);
   } else {
     await receivedMessage.channel.send(
