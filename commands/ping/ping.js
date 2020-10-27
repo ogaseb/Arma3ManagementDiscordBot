@@ -28,7 +28,7 @@ module.exports.pingServer = async function(receivedMessage) {
     })
     .catch(async error => {
       await receivedMessage.channel.send(
-        "Nie mogę pobrać info o serwerze, prawdopodobnie jest wyłaczony."
+        `Nie mogę pobrać info o serwerze, prawdopodobnie jest wyłaczony. ${error}`
       );
     });
 };
