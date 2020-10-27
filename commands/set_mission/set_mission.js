@@ -14,7 +14,7 @@ module.exports.setMission = async function(
       );
     }
 
-    bnode.sendCommand(`#mission ${mission}`);
+    bnode.sendCommand(`#mission ${mission.replace(/['"]+/g, "")}`);
   } else {
     await receivedMessage.channel.send(
       `Nie masz uprawnień do korzystania z tego!`
