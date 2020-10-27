@@ -13,7 +13,7 @@ module.exports.setMission = async function(
         `Komenda jest źle wpisana! (nazwa misji)`
       );
     }
-
+    console.log(`#mission ${mission.replace(/['"]+/g, "")}`);
     bnode.sendCommand(`#mission ${mission.replace(/['"]+/g, "")}`);
   } else {
     await receivedMessage.channel.send(
