@@ -14,15 +14,27 @@ module.exports.pingServer = async function(receivedMessage) {
         .setThumbnail(
           "https://image.winudf.com/v2/image/YWRueWV5LnNvdW5kLmF5YXlhX2ljb25fMF9lNTE3ODM5OA/icon.png"
         )
-        .addField("IP", state.connect, true)
-        .addField("Ping", state.ping, true)
+        .addField("IP", state.connect ? state.connect : "-", true)
+        .addField("Ping", state.ping ? state.ping : "-", true)
         .addField("\u200b", "\u200b")
-        .addField("Nazwa", state.name, true)
-        .addField("Mapa", state.map, true)
-        .addField("Moduł", state.raw.game, true)
-        .addField("Liczba graczy", state.raw.numplayers, true)
-        .addField("Max. liczba graczy", state.maxplayers, true)
-        .addField("Wersja gry", state.raw.version, true)
+        .addField("Nazwa", state.name ? state.name : "-", true)
+        .addField("Mapa", state.map ? state.map : "-", true)
+        .addField("Moduł", state.raw.game ? state.raw.game : "-", true)
+        .addField(
+          "Liczba graczy",
+          state.raw.numplayers ? state.raw.numplayers : "-",
+          true
+        )
+        .addField(
+          "Max. liczba graczy",
+          state.maxplayers ? state.maxplayers : "-",
+          true
+        )
+        .addField(
+          "Wersja gry",
+          state.raw.version ? state.raw.version : "-",
+          true
+        )
         .setTimestamp();
       await receivedMessage.channel.send(embed);
     })
