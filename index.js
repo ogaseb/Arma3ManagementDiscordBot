@@ -26,8 +26,6 @@ const config = {
   rconPassword: process.env.RCON_PASSWORD
 };
 let bnode = null;
-let interval,
-  timeout = null;
 
 void (async function() {
   try {
@@ -38,28 +36,31 @@ void (async function() {
 })();
 
 const battleEye = () => {
+  let interval,
+    timeout = null;
+
   bnode = null;
-  console.log(bnode);
   bnode = new BattleNode(config);
-  console.log(bnode);
-  console.log(interval);
+
   if (interval) {
     clearInterval(interval);
     interval = null;
+  }
+  if (timeout) {
+    clearTimeout(timeout);
+    timeout = null;
   }
   try {
     bnode.login();
     bnode.on("login", async (err, success) => {
       if (err) {
-        console.log("Unable to connect to server.");
         return (timeout = setTimeout(async () => {
           if (bnode) bnode.socket.close();
+          bnode = null;
           battleEye();
           return console.log("creating new battle class");
         }, 15000));
       }
-      console.log(interval);
-      console.log(timeout);
       if (success === true) {
         if (interval) {
           clearInterval(interval);
@@ -107,8 +108,6 @@ const battleEye = () => {
     });
 
     bnode.on("disconnected", async function() {
-      console.log(interval);
-      console.log(timeout);
       console.log("disconnected");
       if (interval) {
         clearInterval(interval);
@@ -121,6 +120,7 @@ const battleEye = () => {
 
       return (timeout = setTimeout(async () => {
         if (bnode) bnode.socket.close();
+        bnode = null;
         battleEye();
         return console.log("creating new battle class");
       }, 15000));
