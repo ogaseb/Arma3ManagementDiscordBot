@@ -33,14 +33,10 @@ void (async function() {
     console.log(e);
   }
 })();
-
+let bnode = null;
+let interval,
+  timeout = null;
 const battleEye = () => {
-  let interval,
-    timeout = null;
-  let bnode = null;
-
-  bnode = new BattleNode(config);
-
   if (interval) {
     clearInterval(interval);
     interval = null;
@@ -50,6 +46,7 @@ const battleEye = () => {
     timeout = null;
   }
   try {
+    bnode = new BattleNode(config);
     bnode.login();
     bnode.on("login", async (err, success) => {
       if (err) {
