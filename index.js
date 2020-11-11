@@ -25,7 +25,6 @@ const config = {
   port: process.env.RCON_PORT,
   rconPassword: process.env.RCON_PASSWORD
 };
-let bnode = null;
 
 void (async function() {
   try {
@@ -38,8 +37,8 @@ void (async function() {
 const battleEye = () => {
   let interval,
     timeout = null;
+  let bnode = null;
 
-  bnode = null;
   bnode = new BattleNode(config);
 
   if (interval) {
