@@ -138,7 +138,7 @@ client.on("ready", async () => {
   });
 
   cron.schedule(
-    "30 17 * * 2,4",
+    "30 17 * * 1,5",
     async () => {
       await client.channels.cache
         .get("753735965142417420")
@@ -183,7 +183,6 @@ const processCommand = async receivedMessage => {
   }
 
   const messageArguments = fullCommand.match(regexes.ARGUMENTS);
-  console.log(messageArguments);
   if (messageArguments !== null && messageArguments.length) {
     primaryCommand = messageArguments[0]; // The first word directly after the exclamation is the command
     messageArguments.splice(0, 1);
