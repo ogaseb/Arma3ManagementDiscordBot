@@ -59,12 +59,12 @@ cleanup() {
   exit "${EXIT_CODE}"
 }
 
-if [[ -f "${PID_FILE}" ]]; then
-  echo "Already running: PID=$(cat ${PID_FILE})"
-  exit 60
-else
-  echo $$ > "${PID_FILE}"
-fi
+# if [[ -f "${PID_FILE}" ]]; then
+#   echo "Already running: PID=$(cat ${PID_FILE})"
+#   exit 60
+# else
+#   echo $$ > "${PID_FILE}"
+# fi
 ###
 
 # Mandatory variables
@@ -73,16 +73,16 @@ CURL_CMD="/usr/bin/curl"               # CURL command
 STEAM_CHANGELOG_URL="https://steamcommunity.com/sharedfiles/filedetails/changelog"    # URL to get the date of the last MOD's update in a WorkShop
 # Change it according to your paths
 # Path to 'steamcmd' executable file
-STEAM_CMD_PATH="./home/steam/Steam/steamcmd/steamcmd.sh"
+STEAM_CMD_PATH="/home/propanek/Steam/steamcmd.sh"
 # Path to there is Workshop downloaded the MODs
-WORKSHOP_PATH="./home/steam/Steam/steamapps/workshop"
+WORKSHOP_PATH="/home/propanek/Steam/steamapps/workshop"
 # Notification script
 NOTIFICATION_SCRIPT=$(dirname "${BASH_SOURCE[0]}")/notify_update_status.sh
 
 # Authentication
-if [[ ! -f $(dirname ${BASH_SOURCE[0]})/../auth.sh ]]; then
+if [[ ! -f $(dirname ${BASH_SOURCE[0]})/auth.sh ]]; then
 # Optional variables
-    STEAM_LOGIN=""                    # Steam login (with a purchased Arma 3)
+    STEAM_LOGIN="anonymous"         # Steam login (with a purchased Arma 3)
     STEAM_PASS=""                   # Steam password
   else
     if [[ $- =~ x ]]; then debug=1; set +x; fi
@@ -117,25 +117,25 @@ Usage
 EOF
 }
 
-# Check authorization data for Steam
-  # Checking for does the Steam login and password are pre-configured?
-  if [[ -z "${STEAM_LOGIN}" ]]; then
-    clear
-    read -e -p "Steam login is undefined. Please, enter it now: " STEAM_LOGIN
-    if [[ -z "${STEAM_LOGIN}" ]]; then
-      echo -ne "Steam login not specified! Exiting!\n"
-      exit 52
-    fi
-  fi
-  if [[ -z "${STEAM_PASS}" ]]; then
-    clear
-    read -sep "Steam password is undefined. Please, enter it now (password will not be displayed in console output!): " STEAM_PASS
-    if [[ -z "${STEAM_PASS}" ]]; then
-      echo -ne "Steam password not specified! Exiting!\n"
-      exit 52
-    fi
-  fi
-  clear
+# # Check authorization data for Steam
+#   # Checking for does the Steam login and password are pre-configured?
+#   if [[ -z "${STEAM_LOGIN}" ]]; then
+#     clear
+#     read -e -p "Steam login is undefined. Please, enter it now: " STEAM_LOGIN
+#     if [[ -z "${STEAM_LOGIN}" ]]; then
+#       echo -ne "Steam login not specified! Exiting!\n"
+#       exit 52
+#     fi
+#   fi
+#   if [[ -z "${STEAM_PASS}" ]]; then
+#     clear
+#     read -sep "Steam password is undefined. Please, enter it now (password will not be displayed in console output!): " STEAM_PASS
+#     if [[ -z "${STEAM_PASS}" ]]; then
+#       echo -ne "Steam password not specified! Exiting!\n"
+#       exit 52
+#     fi
+#   fi
+#   clear
 
 check_mod_id() {
   if [[ -z "${MOD_ID}" ]]; then
@@ -533,6 +533,7 @@ case "${ACTION}" in
     download_mod
     fixuppercase
     fixappid
+    exit 0
     ;;
   q | Q )
     echo "Quit"

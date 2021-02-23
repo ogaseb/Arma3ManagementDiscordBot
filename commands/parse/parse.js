@@ -2,6 +2,8 @@ const fs = require("fs");
 const cheerio = require("cheerio");
 const axios = require("axios");
 const { validatePermissions } = require("../../helpers/helpers");
+const { spawn } = require("child_process");
+const { da } = require("date-fns/locale");
 
 module.exports.parseModList = async function(receivedMessage) {
   if (validatePermissions(receivedMessage)) {
@@ -56,6 +58,31 @@ module.exports.parseModList = async function(receivedMessage) {
     const result = modNamesString + "\n\n" + modString + "\n\n" + modStringEx;
 
     console.log(result);
+
+    modsIdArray.forEach(modId => {
+      const child = spawn("./a3upddownmod.sh");
+
+      // process.stdin.pipe(child.stdin)
+
+      child.stdout.on("data", data => {
+        console.log(`${data}\n`);
+
+        const searchInData = data.search("Fixed upper case for MOD");
+
+        if (searchInData !== -1) {
+          console.log(`its kinda working?`);
+        }
+      });
+
+      child.on("close", code => {
+        console.log(`child process exited with code ${code}`);
+      });
+
+      setTimeout(() => {
+        child.stdin.write("d\n");
+        child.stdin.write(`${modId}\n`);
+      }, 1000);
+    });
 
     fs.writeFile(
       `./greatest_sacred_automated_mod_list_file_for_${fileName}.txt`,
