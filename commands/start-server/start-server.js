@@ -1,8 +1,16 @@
-const { validateAdmin, startServer } = require("../../helpers/helpers");
+const {
+  validateAdmin,
+  startServer,
+  checkIfServerIsOn
+} = require("../../helpers/helpers");
 const Gamedig = require("gamedig");
 
 module.exports.startServer = async function(receivedMessage) {
   if (validateAdmin(receivedMessage)) {
+    if (checkIfServerIsOn()) {
+      return receivedMessage.channel.send("Server już jest uruchomiony");
+    }
+
     await receivedMessage.channel.send("Uruchamiam server...");
 
     setTimeout(() => {
@@ -21,7 +29,7 @@ module.exports.startServer = async function(receivedMessage) {
         });
     }, 5000);
 
-    await startServer();
+    startServer();
   } else {
     await receivedMessage.channel.send(
       `Nie masz uprawnień do korzystania z tego!`

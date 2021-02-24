@@ -44,17 +44,10 @@ function validateAdmin(receivedMessage) {
 }
 
 function stopServer() {
-  fs.readFile("./arma3.pid", "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-
-    console.log(data);
-    if (require("is-running")(parseInt(data))) {
-      process.kill(parseInt(data));
-    }
-  });
+  const pid = fs.readFileSync("./arma3.pid", "utf8");
+  if (require("is-running")(parseInt(pid))) {
+    process.kill(parseInt(pid));
+  }
 }
 
 function startServer() {
@@ -67,34 +60,25 @@ function startServer() {
 }
 
 function restartServer() {
-  fs.readFile("./arma3.pid", "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-
-    console.log(data);
-    if (require("is-running")(parseInt(data))) {
-      process.kill(parseInt(data));
-    } else {
-      const out = fs.openSync("./out.log", "a");
-      const err = fs.openSync("./out.log", "a");
-      spawn("./a3runscript.sh", [], {
-        detached: true,
-        stdio: ["ignore", out, err]
-      }).unref();
-    }
-  });
+  const pid = fs.readFileSync("./arma3.pid", "utf8");
+  console.log(pid);
+  if (require("is-running")(parseInt(pid))) {
+    process.kill(parseInt(pid));
+  } else {
+    const out = fs.openSync("./out.log", "a");
+    const err = fs.openSync("./out.log", "a");
+    spawn("./a3runscript.sh", [], {
+      detached: true,
+      stdio: ["ignore", out, err]
+    }).unref();
+  }
 }
 
 function checkIfServerIsOn() {
-  fs.readFile("./arma3.pid", "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    return !!require("is-running")(parseInt(data));
-  });
+  const pid = fs.readFileSync("./arma3.pid", "utf8");
+  if (pid) {
+    return require("is-running")(parseInt(pid));
+  }
 }
 
 module.exports = {

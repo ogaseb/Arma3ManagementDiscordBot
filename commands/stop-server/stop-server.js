@@ -1,7 +1,15 @@
-const { validateAdmin, stopServer } = require("../../helpers/helpers");
+const {
+  validateAdmin,
+  stopServer,
+  checkIfServerIsOn
+} = require("../../helpers/helpers");
 
 module.exports.stopServer = async function(receivedMessage) {
   if (validateAdmin(receivedMessage)) {
+    if (!checkIfServerIsOn()) {
+      return receivedMessage.channel.send("Server jest już wyłączony");
+    }
+
     await receivedMessage.channel.send("Wyłączam serwer...");
 
     stopServer();
