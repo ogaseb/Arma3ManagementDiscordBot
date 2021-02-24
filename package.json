@@ -10,6 +10,7 @@
   "dependencies": {
     "arma-rcon": "^1.0.2",
     "async": "^3.2.0",
+    "await-spawn": "^4.0.1",
     "axios": "^0.20.0",
     "basic-ftp": "^4.6.2",
     "battle-node": "^0.1.2",
@@ -20,8 +21,10 @@
     "dotenv": "^8.2.0",
     "gamedig": "^2.0.23",
     "global": "^4.4.0",
+    "is-running": "^2.1.0",
     "lodash": "^4.17.15",
     "node-cron": "^2.0.3",
+    "node-tmux": "^1.0.2",
     "pg": "^7.14.0",
     "progress-string": "^1.2.2",
     "sequelize": "^5.21.2"

@@ -1,9 +1,12 @@
 const fs = require("fs");
 const cheerio = require("cheerio");
 const axios = require("axios");
-const { validatePermissions } = require("../../helpers/helpers");
-const { spawn } = require("child_process");
-const { da } = require("date-fns/locale");
+const {
+  validatePermissions,
+  stopServer,
+  checkIfServerIsOn
+} = require("../../helpers/helpers");
+const { downloadMods } = require("./download_mods");
 
 module.exports.parseModList = async function(receivedMessage) {
   if (validatePermissions(receivedMessage)) {
@@ -27,9 +30,19 @@ module.exports.parseModList = async function(receivedMessage) {
     const $ = cheerio.load(parsed);
     const modsIdArray = [];
     const modsNamesArray = [];
+    const modsIdArrayWithAt = [];
 
     $("[data-type=ModContainer]").map((i, element) => {
       modsIdArray.push(
+        `${
+          $(element)
+            .find("td:nth-of-type(3)")
+            .text()
+            .trim()
+            .split("=")[1]
+        }`
+      );
+      modsIdArrayWithAt.push(
         `@${
           $(element)
             .find("td:nth-of-type(3)")
@@ -52,37 +65,9 @@ module.exports.parseModList = async function(receivedMessage) {
       );
     });
     const modNamesString = modsNamesArray.join("\n");
-    const modString = '-mod="' + modsIdArray.join(";") + ';"';
-    const modStringEx = modsIdArray.join(";") + ";";
-
+    const modString = '-mod="' + modsIdArrayWithAt.join(";") + ';"';
+    const modStringEx = modsIdArrayWithAt.join(";") + ";";
     const result = modNamesString + "\n\n" + modString + "\n\n" + modStringEx;
-
-    console.log(result);
-
-    modsIdArray.forEach(modId => {
-      const child = spawn("./a3upddownmod.sh");
-
-      // process.stdin.pipe(child.stdin)
-
-      child.stdout.on("data", data => {
-        console.log(`${data}\n`);
-
-        const searchInData = data.search("Fixed upper case for MOD");
-
-        if (searchInData !== -1) {
-          console.log(`its kinda working?`);
-        }
-      });
-
-      child.on("close", code => {
-        console.log(`child process exited with code ${code}`);
-      });
-
-      setTimeout(() => {
-        child.stdin.write("d\n");
-        child.stdin.write(`${modId}\n`);
-      }, 1000);
-    });
 
     fs.writeFile(
       `./greatest_sacred_automated_mod_list_file_for_${fileName}.txt`,
@@ -111,6 +96,14 @@ module.exports.parseModList = async function(receivedMessage) {
         );
       }
     );
+    stopServer();
+
+    const interval = setInterval(async () => {
+      if (!checkIfServerIsOn()) {
+        clearInterval(interval);
+        return downloadMods(receivedMessage, modsIdArray, modsNamesArray);
+      }
+    }, 1000);
   } else {
     await receivedMessage.channel.send(
       `Nie masz uprawnień do korzystania z tego!`

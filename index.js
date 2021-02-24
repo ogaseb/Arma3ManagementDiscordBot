@@ -10,6 +10,8 @@ const { getBannedUsers } = require("./commands/get_bans/get_bans");
 const { banUser } = require("./commands/ban/ban");
 const { reassignRoles } = require("./commands/reassign/reassign");
 const { restartServer } = require("./commands/restart-server/restart-server");
+const { startServer } = require("./commands/start-server/start-server");
+const { stopServer } = require("./commands/stop-server/stop-server");
 const { setMission } = require("./commands/set_mission/set_mission");
 const { kickUser } = require("./commands/kick/kick");
 const { sayToUsers } = require("./commands/say/say");
@@ -233,6 +235,14 @@ const processCommand = async receivedMessage => {
 
   if (primaryCommand === "restart-server") {
     return restartServer(receivedMessage, bnode);
+  }
+
+  if (primaryCommand === "start-server") {
+    return startServer(receivedMessage);
+  }
+
+  if (primaryCommand === "stop-server") {
+    return stopServer(receivedMessage);
   }
 
   if (primaryCommand === "reassign") {

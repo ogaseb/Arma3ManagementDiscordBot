@@ -1,11 +1,9 @@
-const { validateAdmin, restartServer } = require("../../helpers/helpers");
+const { validateAdmin, startServer } = require("../../helpers/helpers");
 const Gamedig = require("gamedig");
 
-module.exports.restartServer = async function(receivedMessage) {
+module.exports.startServer = async function(receivedMessage) {
   if (validateAdmin(receivedMessage)) {
-    await receivedMessage.channel.send(
-      "Restartuje serwer, dam info kiedy wstanie poczekaj..."
-    );
+    await receivedMessage.channel.send("Uruchamiam server...");
 
     setTimeout(() => {
       Gamedig.query({
@@ -23,7 +21,7 @@ module.exports.restartServer = async function(receivedMessage) {
         });
     }, 5000);
 
-    restartServer();
+    await startServer();
   } else {
     await receivedMessage.channel.send(
       `Nie masz uprawnień do korzystania z tego!`

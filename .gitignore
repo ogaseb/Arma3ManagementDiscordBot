@@ -3,3 +3,6 @@ yarn.lock
 .idea
 .env
 /config/config.json
+out.log
+ids.txt
+arma3.pid

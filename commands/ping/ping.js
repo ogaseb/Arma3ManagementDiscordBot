@@ -4,7 +4,7 @@ const { MessageEmbed } = require("discord.js");
 module.exports.pingServer = async function(receivedMessage) {
   Gamedig.query({
     type: "arma3",
-    host: "137.74.4.131"
+    host: "propaniusz.servegame.com"
   })
     .then(async state => {
       const embed = new MessageEmbed()

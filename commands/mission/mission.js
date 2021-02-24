@@ -2,7 +2,12 @@ const progress = require("progress-string");
 const ftp = require("basic-ftp");
 const fs = require("fs");
 const axios = require("axios");
-const { validatePermissions } = require("../../helpers/helpers");
+const {
+  validatePermissions,
+  stopServer,
+  startServer,
+  checkIfServerIsOn
+} = require("../../helpers/helpers");
 
 module.exports.sendMission = async function(receivedMessage) {
   if (validatePermissions(receivedMessage)) {
@@ -38,50 +43,62 @@ module.exports.sendMission = async function(receivedMessage) {
 
     response.data.pipe(fs.createWriteStream(`./${fileName}`));
     let loading = await receivedMessage.channel.send(`Sending file...`);
+
     const client = new ftp.Client();
     client.ftp.verbose = true;
 
-    try {
-      await client.access({
-        host: process.env.FTP_IP,
-        port: process.env.FTP_PORT,
-        user: process.env.FTP_USERNAME,
-        password: process.env.FTP_PASSWORD,
-        secure: false
-      });
+    stopServer();
+    console.log("stopping server");
 
-      await client.cd("137.74.4.131_2302/mpmissions");
-      client.trackProgress(async info => {
-        const msg = await receivedMessage.channel.messages.fetch({
-          around: loading.id,
-          limit: 1
+    const interval = setInterval(async () => {
+      if (!checkIfServerIsOn()) {
+        clearInterval(interval);
+
+        try {
+          await client.access({
+            host: process.env.FTP_IP,
+            port: process.env.FTP_PORT,
+            user: process.env.FTP_USERNAME,
+            password: process.env.FTP_PASSWORD,
+            secure: false
+          });
+
+          client.trackProgress(async info => {
+            const msg = await receivedMessage.channel.messages.fetch({
+              around: loading.id,
+              limit: 1
+            });
+            const fetchedMsg = msg.first();
+            await fetchedMsg.edit(
+              `${bar(info.bytesOverall)} (${info.bytesOverall}/${total}) bytes`
+            );
+          });
+
+          await client.uploadFrom(`./${fileName}`, `${fileName}`);
+          client.trackProgress();
+        } catch (err) {
+          console.log(err);
+        }
+        client.close();
+
+        await fs.unlink(`./${fileName}`, async err => {
+          if (err) {
+            console.error(err);
+            await receivedMessage.channel.send(
+              `Coś się wyjebało, daj info ProPankowi`
+            );
+            return;
+          }
+          console.log("html file removed!");
+          await receivedMessage.channel.send(
+            `Jest w pytke. Misyja jest już na serwie!`
+          );
+
+          startServer();
+          console.log("starting server");
         });
-        const fetchedMsg = msg.first();
-        await fetchedMsg.edit(
-          `${bar(info.bytesOverall)} (${info.bytesOverall}/${total}) bytes`
-        );
-      });
-
-      await client.uploadFrom(`./${fileName}`, `${fileName}`);
-      client.trackProgress();
-    } catch (err) {
-      console.log(err);
-    }
-    client.close();
-
-    await fs.unlink(`./${fileName}`, async err => {
-      if (err) {
-        console.error(err);
-        await receivedMessage.channel.send(
-          `Coś się wyjebało, daj info ProPankowi`
-        );
-        return;
       }
-      console.log("html file removed!");
-      await receivedMessage.channel.send(
-        `Jest w pytke. Misyja jest już na serwie!`
-      );
-    });
+    }, 1000);
   } else {
     await receivedMessage.channel.send(
       `Nie masz uprawnień do korzystania z tego!`
