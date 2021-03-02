@@ -8,7 +8,7 @@ const {
 } = require("../../helpers/helpers");
 const { downloadMods } = require("./download_mods");
 
-module.exports.parseModList = async function(receivedMessage) {
+module.exports.parseModList = async function(receivedMessage, client) {
   if (validatePermissions(receivedMessage)) {
     if (!receivedMessage.attachments.size) {
       return await receivedMessage.channel.send(`Nie zapomnij wrzucić pliku!`);
@@ -101,7 +101,15 @@ module.exports.parseModList = async function(receivedMessage) {
     const interval = setInterval(async () => {
       if (!checkIfServerIsOn()) {
         clearInterval(interval);
-        return downloadMods(receivedMessage, modsIdArray, modsNamesArray);
+        await client.user.setActivity(`Serwer jest wyłączony`, {
+          type: "WATCHING"
+        });
+        return downloadMods(
+          receivedMessage,
+          modsIdArray,
+          modsNamesArray,
+          client
+        );
       }
     }, 1000);
   } else {

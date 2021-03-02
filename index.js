@@ -1,8 +1,8 @@
 require("dotenv").config();
-const { Client } = require("discord.js");
-const { regexes } = require("./helpers/helpers");
-const cron = require("node-cron");
 const BattleNode = require("battle-node");
+const { Client } = require("discord.js");
+const { stopServer, regexes, checkIfServerIsOn } = require("./helpers/helpers");
+const cron = require("node-cron");
 const { pingServer } = require("./commands/ping/ping");
 const { removeBan } = require("./commands/remove_ban/remove_ban");
 const { checkIfDM } = require("./helpers/helpers");
@@ -11,7 +11,9 @@ const { banUser } = require("./commands/ban/ban");
 const { reassignRoles } = require("./commands/reassign/reassign");
 const { restartServer } = require("./commands/restart-server/restart-server");
 const { startServer } = require("./commands/start-server/start-server");
-const { stopServer } = require("./commands/stop-server/stop-server");
+const {
+  stopServer: stopCommandServer
+} = require("./commands/stop-server/stop-server");
 const { setMission } = require("./commands/set_mission/set_mission");
 const { kickUser } = require("./commands/kick/kick");
 const { sayToUsers } = require("./commands/say/say");
@@ -20,24 +22,23 @@ const { getPlayers } = require("./commands/players/players");
 const { parseModList } = require("./commands/parse/parse");
 const { sendMission } = require("./commands/mission/mission");
 const { sendHelp } = require("./commands/help/help");
-
+const { startVindicta } = require("./commands/start-vindicta/start-vindicta");
 const client = new Client();
+let bnode = null;
+
 const config = {
   ip: process.env.RCON_IP,
   port: process.env.RCON_PORT,
   rconPassword: process.env.RCON_PASSWORD
 };
 
-void (async function() {
-  try {
-    await client.login(process.env.BOT_TOKEN);
-  } catch (e) {
-    console.log(e);
-  }
-})();
-let bnode = null;
 let interval,
-  timeout = null;
+  timeout,
+  switchServerOffInterval = null;
+
+const timeToSwitchOffServer = 1800000;
+// const timeToSwitchOffServer = 60000
+
 const battleEye = () => {
   if (interval) {
     clearInterval(interval);
@@ -46,6 +47,10 @@ const battleEye = () => {
   if (timeout) {
     clearTimeout(timeout);
     timeout = null;
+  }
+  if (switchServerOffInterval) {
+    clearTimeout(switchServerOffInterval);
+    switchServerOffInterval = null;
   }
   try {
     bnode = new BattleNode(config);
@@ -68,14 +73,46 @@ const battleEye = () => {
           clearTimeout(timeout);
           timeout = null;
         }
+        if (switchServerOffInterval) {
+          clearTimeout(switchServerOffInterval);
+          switchServerOffInterval = null;
+        }
         interval = setInterval(async function() {
           bnode.sendCommand("players", async players => {
             let split = "";
             const player = players.split("\n");
             split = player[player.length - 1].split(" ")[0].split("(")[1];
+
             await client.user.setActivity(`graczy na serwerze: ${split}`, {
               type: "WATCHING"
             });
+            console.log(parseInt(split));
+
+            if (parseInt(split) > 0) {
+              console.log("there are players here stop countdown!");
+              clearTimeout(switchServerOffInterval);
+              switchServerOffInterval = null;
+            } else if (parseInt(split) === 0) {
+              console.log("there no players here countdown started");
+              if (switchServerOffInterval === null) {
+                switchServerOffInterval = setTimeout(() => {
+                  console.log("now stopping serwer");
+                  stopServer();
+                  let checkServerinterval = setInterval(() => {
+                    if (!checkIfServerIsOn()) {
+                      clearInterval(checkServerinterval);
+                      checkServerinterval = null;
+                      return client.user.setActivity(
+                        `Serwer został wyłączony.`,
+                        {
+                          type: "WATCHING"
+                        }
+                      );
+                    }
+                  }, 1000);
+                }, timeToSwitchOffServer);
+              }
+            }
           });
         }, 10000);
 
@@ -115,6 +152,10 @@ const battleEye = () => {
         clearTimeout(timeout);
         timeout = null;
       }
+      if (switchServerOffInterval) {
+        clearTimeout(switchServerOffInterval);
+        switchServerOffInterval = null;
+      }
 
       return (timeout = setTimeout(async () => {
         if (bnode) bnode.socket.close();
@@ -128,6 +169,14 @@ const battleEye = () => {
   }
 };
 
+void (async function() {
+  try {
+    await client.login(process.env.BOT_TOKEN);
+  } catch (e) {
+    console.log(e);
+  }
+})();
+
 client.on("ready", async () => {
   console.log("On Discord!");
   console.log("Connected as " + client.user.tag);
@@ -137,6 +186,10 @@ client.on("ready", async () => {
     Array.from(guild.channels.cache.values()).forEach(channel => {
       console.log(` -- ${channel.name} (${channel.type}) - ${channel.id}`);
     });
+  });
+
+  await client.user.setActivity(`Serwer jest wyłączony`, {
+    type: "WATCHING"
   });
 
   cron.schedule(
@@ -152,7 +205,7 @@ client.on("ready", async () => {
   );
 
   cron.schedule(
-    "30 16 * * 7",
+    "30 17 * * 7",
     async () => {
       await client.channels.cache
         .get("753735965142417420")
@@ -191,11 +244,11 @@ const processCommand = async receivedMessage => {
   }
 
   if (primaryCommand === "parse") {
-    return parseModList(receivedMessage);
+    return parseModList(receivedMessage, client);
   }
 
   if (primaryCommand === "mission") {
-    return sendMission(receivedMessage);
+    return sendMission(receivedMessage, client);
   }
 
   if (primaryCommand === "help") {
@@ -234,15 +287,19 @@ const processCommand = async receivedMessage => {
   }
 
   if (primaryCommand === "restart-server") {
-    return restartServer(receivedMessage, bnode);
+    return restartServer(receivedMessage, client);
   }
 
   if (primaryCommand === "start-server") {
-    return startServer(receivedMessage);
+    return startServer(receivedMessage, client);
+  }
+
+  if (primaryCommand === "start-vindicta") {
+    return startVindicta(receivedMessage, client);
   }
 
   if (primaryCommand === "stop-server") {
-    return stopServer(receivedMessage);
+    return stopCommandServer(receivedMessage, client);
   }
 
   if (primaryCommand === "reassign") {

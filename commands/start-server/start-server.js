@@ -1,17 +1,20 @@
 const {
-  validateAdmin,
   startServer,
-  checkIfServerIsOn
+  checkIfServerIsOn,
+  validatePermissions
 } = require("../../helpers/helpers");
 const Gamedig = require("gamedig");
 
-module.exports.startServer = async function(receivedMessage) {
-  if (validateAdmin(receivedMessage)) {
+module.exports.startServer = async function(receivedMessage, client) {
+  if (validatePermissions(receivedMessage)) {
     if (checkIfServerIsOn()) {
       return receivedMessage.channel.send("Server już jest uruchomiony");
     }
 
     await receivedMessage.channel.send("Uruchamiam server...");
+    await client.user.setActivity(`Serwer jest uruchamiany...`, {
+      type: "WATCHING"
+    });
 
     setTimeout(() => {
       Gamedig.query({

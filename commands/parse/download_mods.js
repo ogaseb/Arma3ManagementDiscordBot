@@ -53,7 +53,9 @@ module.exports.downloadMods = async function(
           }
         });
         restartServer();
-        return console.log("end");
+        return client.user.setActivity(`Serwer jest uruchamiany.`, {
+          type: "WATCHING"
+        });
       } else {
         return download(modsIdArray[interval]);
       }
@@ -85,9 +87,6 @@ module.exports.downloadMods = async function(
       child.stdin.write("s\n");
       child.stdin.write("\n");
       child.stdin.write(`${id}\n`);
-      // child.stdout.on('data', (data) => {
-      //   console.log(`${data}\n`);
-      // });
 
       child.on("close", () => {
         return checkIfEnd();

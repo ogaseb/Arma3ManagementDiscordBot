@@ -5,11 +5,10 @@ const axios = require("axios");
 const {
   validatePermissions,
   stopServer,
-  startServer,
   checkIfServerIsOn
 } = require("../../helpers/helpers");
 
-module.exports.sendMission = async function(receivedMessage) {
+module.exports.sendMission = async function(receivedMessage, client) {
   if (validatePermissions(receivedMessage)) {
     if (!receivedMessage.attachments.size) {
       return await receivedMessage.channel.send(`Nie zapomnij wrzucić pliku!`);
@@ -24,78 +23,45 @@ module.exports.sendMission = async function(receivedMessage) {
         `Myślisz ze jesteś cwany? Misje wrzucaj a nie swoje nudesy xD`
       );
     }
-
-    const fileName = toGetFileName[toGetFileName.length - 1];
-    const response = await axios({
-      method: "get",
-      url: receivedMessage.attachments.first().url,
-      responseType: "stream"
-    });
-
-    const total = response.headers["content-length"];
-    let bar = progress({
-      width: 50,
-      total: parseInt(total),
-      style: function(complete, incomplete) {
-        return "[" + complete + ">" + incomplete + "]";
-      }
-    });
-
-    response.data.pipe(fs.createWriteStream(`./${fileName}`));
-    let loading = await receivedMessage.channel.send(`Sending file...`);
-
-    const client = new ftp.Client();
-    client.ftp.verbose = true;
-
+    let loading = await receivedMessage.channel.send(`Saving file...`);
     stopServer();
-    console.log("stopping server");
 
     const interval = setInterval(async () => {
       if (!checkIfServerIsOn()) {
         clearInterval(interval);
+        await client.user.setActivity(`Serwer jest wyłączony.`, {
+          type: "WATCHING"
+        });
 
-        try {
-          await client.access({
-            host: process.env.FTP_IP,
-            port: process.env.FTP_PORT,
-            user: process.env.FTP_USERNAME,
-            password: process.env.FTP_PASSWORD,
-            secure: false
-          });
+        const fileName = toGetFileName[toGetFileName.length - 1];
+        const response = await axios({
+          method: "get",
+          url: receivedMessage.attachments.first().url,
+          responseType: "stream"
+        });
 
-          client.trackProgress(async info => {
-            const msg = await receivedMessage.channel.messages.fetch({
-              around: loading.id,
-              limit: 1
-            });
-            const fetchedMsg = msg.first();
-            await fetchedMsg.edit(
-              `${bar(info.bytesOverall)} (${info.bytesOverall}/${total}) bytes`
-            );
-          });
-
-          await client.uploadFrom(`./${fileName}`, `${fileName}`);
-          client.trackProgress();
-        } catch (err) {
-          console.log(err);
-        }
-        client.close();
-
-        await fs.unlink(`./${fileName}`, async err => {
-          if (err) {
-            console.error(err);
-            await receivedMessage.channel.send(
-              `Coś się wyjebało, daj info ProPankowi`
-            );
-            return;
+        const total = response.headers["content-length"];
+        let bar = progress({
+          width: 50,
+          total: parseInt(total),
+          style: function(complete, incomplete) {
+            return "[" + complete + ">" + incomplete + "]";
           }
-          console.log("html file removed!");
-          await receivedMessage.channel.send(
-            `Jest w pytke. Misyja jest już na serwie!`
+        });
+        const missionFile = fs.createWriteStream(
+          `/home/propanek/Steam/arma3/mpmissions/${fileName}`
+        );
+        response.data.pipe(missionFile);
+
+        missionFile.on("finish", async function() {
+          console.log(
+            "file downloaded to ",
+            `/home/propanek/Steam/arma3/mpmissions/${fileName}`
           );
 
-          startServer();
-          console.log("starting server");
+          await receivedMessage.channel.send(
+            `Jest w pytke. Misyja \`${fileName}\` jest już na serwie! Teraz możesz uruchomić serwer ponownie.`
+          );
         });
       }
     }, 1000);

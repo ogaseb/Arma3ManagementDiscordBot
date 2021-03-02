@@ -2,8 +2,8 @@ const { spawn } = require("child_process");
 const fs = require("fs");
 
 const regexes = {
-  ARGUMENTS: /\b\w*parse|mission|help|players|get-missions|say|kick|set-mission|restart-server|start-server|stop-server|reassign|ban|get-bans|remove-ban|ping\w*\b|-?[0-9]\d*(\.\d+)?|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“|(<[^]*[>$])/gm,
-  COMMANDS: /\b\w*parse|mission|help|players|get-missions|say|kick|set-mission|restart-server|start-server|stop-server|reassign|ban|get-bans|remove-ban|ping\w*\b/gm,
+  ARGUMENTS: /\b\w*parse|mission|help|players|get-missions|say|kick|set-mission|restart-server|start-server|stop-server|start-vindicta|reassign|ban|get-bans|remove-ban|ping\w*\b|-?[0-9]\d*(\.\d+)?|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“|(<[^]*[>$])/gm,
+  COMMANDS: /\b\w*parse|mission|help|players|get-missions|say|kick|set-mission|restart-server|start-server|stop-server|start-vindicta|reassign|ban|get-bans|remove-ban|ping\w*\b/gm,
   CONTENT: /"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“/gm,
   NUMBER: /^(?!.*<@)-?[0-9]\d*(\.\d+)?/gm,
   MENTION: /(<[^]*[>$])/gm,
@@ -44,6 +44,10 @@ function validateAdmin(receivedMessage) {
 }
 
 function stopServer() {
+  fs.unlink("./out.log", function(err) {
+    if (err) return console.log(err);
+    console.log("last logs removed");
+  });
   const pid = fs.readFileSync("./arma3.pid", "utf8");
   if (require("is-running")(parseInt(pid))) {
     process.kill(parseInt(pid));
@@ -60,18 +64,27 @@ function startServer() {
 }
 
 function restartServer() {
+  fs.unlink("./out.log", function(err) {
+    if (err) return console.log(err);
+    console.log("last logs removed");
+  });
   const pid = fs.readFileSync("./arma3.pid", "utf8");
-  console.log(pid);
+
   if (require("is-running")(parseInt(pid))) {
     process.kill(parseInt(pid));
-  } else {
-    const out = fs.openSync("./out.log", "a");
-    const err = fs.openSync("./out.log", "a");
-    spawn("./a3runscript.sh", [], {
-      detached: true,
-      stdio: ["ignore", out, err]
-    }).unref();
   }
+
+  const interval = setInterval(async () => {
+    if (!checkIfServerIsOn()) {
+      clearInterval(interval);
+      const out = fs.openSync("./out.log", "a");
+      const err = fs.openSync("./out.log", "a");
+      spawn("./a3runscript.sh", [], {
+        detached: true,
+        stdio: ["ignore", out, err]
+      }).unref();
+    }
+  }, 1000);
 }
 
 function checkIfServerIsOn() {

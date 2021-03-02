@@ -1,7 +1,7 @@
 const { validateAdmin, restartServer } = require("../../helpers/helpers");
 const Gamedig = require("gamedig");
 
-module.exports.restartServer = async function(receivedMessage) {
+module.exports.restartServer = async function(receivedMessage, client) {
   if (validateAdmin(receivedMessage)) {
     await receivedMessage.channel.send(
       "Restartuje serwer, dam info kiedy wstanie poczekaj..."
@@ -24,6 +24,9 @@ module.exports.restartServer = async function(receivedMessage) {
     }, 5000);
 
     restartServer();
+    await client.user.setActivity(`Serwer restart.`, {
+      type: "WATCHING"
+    });
   } else {
     await receivedMessage.channel.send(
       `Nie masz uprawnień do korzystania z tego!`

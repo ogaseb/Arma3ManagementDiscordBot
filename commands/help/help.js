@@ -10,10 +10,55 @@ module.exports.sendHelp = function(receivedMessage, destination) {
       .addField("dostęp", "```Sztab, Zeus, Technik```")
       .addField(
         "Opis",
-        "```parse -  Służy do parsowania waszych presetów z modami na liste modów, którą potem wrzucam na serwer żeby wiedział które ma sobie załadować```"
+        "```parse -  Jeśli chcesz odpalić serwer z twoją listą modów, to jest komenda którą szukasz```"
       )
       .addField("Komenda: ", "```$parse```")
       .addField("Przykład: ", "```$parse (jako komentarz do pliku)```")
+  );
+
+  embeds.push(
+    new MessageEmbed()
+      .addField("**KOMENDA**: ", "```start-server```")
+      .addField("dostęp", "```Sztab, Technik```")
+      .addField(
+        "Opis",
+        "```start-server -  Tym odpalasz serwer (z ostatnią sparsowaną listą modów)```"
+      )
+      .addField("Komenda: ", "```$start-server```")
+      .addField("Przykład: ", "```$start-server```")
+  );
+
+  embeds.push(
+    new MessageEmbed()
+      .addField("**KOMENDA**: ", "```stop-server```")
+      .addField("dostęp", "```Sztab, Technik```")
+      .addField("Opis", "```stop-server -  Tym wyłączas serwer duh.```")
+      .addField("Komenda: ", "```$stop-server```")
+      .addField("Przykład: ", "```$stop-server```")
+  );
+
+  embeds.push(
+    new MessageEmbed()
+      .addField("**KOMENDA**: ", "```restart-server```")
+      .addField("dostęp", "```Sztab, Technik```")
+      .addField(
+        "Opis",
+        "```restart-server -  tym po prostu restartujesz serwer```"
+      )
+      .addField("Komenda: ", "```$restart-server```")
+      .addField("Przykład: ", "```$restart-server```")
+  );
+
+  embeds.push(
+    new MessageEmbed()
+      .addField("**KOMENDA**: ", "```start-vindicta```")
+      .addField("dostęp", "```Sztab, Technik```")
+      .addField(
+        "Opis",
+        "```start-vindicta -  Tym odpalasz/restartujesz serwer z konkretnym trybem, w tym przypadku jest to Vindicta```"
+      )
+      .addField("Komenda: ", "```$start-vindicta```")
+      .addField("Przykład: ", "```$start-vindicta```")
   );
 
   embeds.push(
