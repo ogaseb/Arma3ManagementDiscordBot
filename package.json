@@ -1,9 +1,9 @@
 {
-  "name": "wixxa_guard",
+  "name": "world_tension_discordd_bot",
   "version": "1.0.0",
-  "description": "wixxaGuard discord bot",
+  "description": "World Tension discord bot",
   "main": "index.js",
-  "repository": "https://github.com/ProPanek/wixxaGuard",
+  "repository": "https://github.com/ProPanek/WorldTensionBot",
   "author": "ProPanek <oga.seb@gmail.com>",
   "license": "MIT",
   "private": true,
@@ -11,8 +11,7 @@
     "arma-rcon": "^1.0.2",
     "async": "^3.2.0",
     "await-spawn": "^4.0.1",
-    "axios": "^0.20.0",
-    "basic-ftp": "^4.6.2",
+    "axios": "^0.21.1",
     "battle-node": "^0.1.2",
     "cheerio": "^1.0.0-rc.3",
     "date-fns": "^2.8.1",
@@ -24,7 +23,6 @@
     "is-running": "^2.1.0",
     "lodash": "^4.17.15",
     "node-cron": "^2.0.3",
-    "node-tmux": "^1.0.2",
     "pg": "^7.14.0",
     "progress-string": "^1.2.2",
     "sequelize": "^5.21.2"
@@ -42,7 +40,7 @@
   "devDependencies": {
     "husky": "^3.0.7",
     "nodemon": "^1.19.4",
-    "pm2": "^4.2.3",
+    "pm2": "^4.5.5",
     "prettier": "^1.19.1",
     "pretty-quick": "^1.11.1",
     "sequelize-cli": "^5.5.1"
