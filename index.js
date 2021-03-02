@@ -24,7 +24,7 @@ const { sendMission } = require("./commands/mission/mission");
 const { sendHelp } = require("./commands/help/help");
 const { startVindicta } = require("./commands/start-vindicta/start-vindicta");
 const client = new Client();
-let bnode = null;
+let bnode = new BattleNode(config);
 
 const config = {
   ip: process.env.RCON_IP,
@@ -37,7 +37,6 @@ let interval,
   switchServerOffInterval = null;
 
 const timeToSwitchOffServer = 1800000;
-// const timeToSwitchOffServer = 60000
 
 const battleEye = () => {
   if (interval) {
@@ -53,7 +52,6 @@ const battleEye = () => {
     switchServerOffInterval = null;
   }
   try {
-    bnode = new BattleNode(config);
     bnode.login();
     bnode.on("login", async (err, success) => {
       if (err) {
