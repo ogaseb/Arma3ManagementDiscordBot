@@ -1,4 +1,5 @@
 require("dotenv").config();
+require("newrelic");
 const BattleNode = require("battle-node");
 const { Client } = require("discord.js");
 const { stopServer, regexes, checkIfServerIsOn } = require("./helpers/helpers");
@@ -23,8 +24,11 @@ const { parseModList } = require("./commands/parse/parse");
 const { sendMission } = require("./commands/mission/mission");
 const { sendHelp } = require("./commands/help/help");
 const { startVindicta } = require("./commands/start-vindicta/start-vindicta");
+const {
+  startVindictaUnsung
+} = require("./commands/start-vindicta-unsung/start-vindicta-unsung");
+
 const client = new Client();
-let bnode = new BattleNode(config);
 
 const config = {
   ip: process.env.RCON_IP,
@@ -32,10 +36,18 @@ const config = {
   rconPassword: process.env.RCON_PASSWORD
 };
 
+void (async function() {
+  try {
+    await client.login(process.env.BOT_TOKEN);
+  } catch (e) {
+    console.log(e);
+  }
+})();
+
 let interval,
   timeout,
-  switchServerOffInterval = null;
-
+  switchServerOffInterval,
+  bnode = null;
 const timeToSwitchOffServer = 1800000;
 
 const battleEye = () => {
@@ -52,6 +64,7 @@ const battleEye = () => {
     switchServerOffInterval = null;
   }
   try {
+    bnode = new BattleNode(config);
     bnode.login();
     bnode.on("login", async (err, success) => {
       if (err) {
@@ -167,14 +180,6 @@ const battleEye = () => {
   }
 };
 
-void (async function() {
-  try {
-    await client.login(process.env.BOT_TOKEN);
-  } catch (e) {
-    console.log(e);
-  }
-})();
-
 client.on("ready", async () => {
   console.log("On Discord!");
   console.log("Connected as " + client.user.tag);
@@ -185,7 +190,7 @@ client.on("ready", async () => {
       console.log(` -- ${channel.name} (${channel.type}) - ${channel.id}`);
     });
   });
-
+  battleEye();
   await client.user.setActivity(`Serwer jest wyłączony`, {
     type: "WATCHING"
   });
@@ -213,7 +218,6 @@ client.on("ready", async () => {
     },
     {}
   );
-  battleEye();
 });
 
 client.on("message", receivedMessage => {
@@ -294,6 +298,10 @@ const processCommand = async receivedMessage => {
 
   if (primaryCommand === "start-vindicta") {
     return startVindicta(receivedMessage, client);
+  }
+
+  if (primaryCommand === "start-unsung") {
+    return startVindictaUnsung(receivedMessage, client);
   }
 
   if (primaryCommand === "stop-server") {

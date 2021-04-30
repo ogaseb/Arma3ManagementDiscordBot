@@ -2,8 +2,8 @@ const { spawn } = require("child_process");
 const fs = require("fs");
 
 const regexes = {
-  ARGUMENTS: /\b\w*parse|mission|help|players|get-missions|say|kick|set-mission|restart-server|start-server|stop-server|start-vindicta|reassign|ban|get-bans|remove-ban|ping\w*\b|-?[0-9]\d*(\.\d+)?|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“|(<[^]*[>$])/gm,
-  COMMANDS: /\b\w*parse|mission|help|players|get-missions|say|kick|set-mission|restart-server|start-server|stop-server|start-vindicta|reassign|ban|get-bans|remove-ban|ping\w*\b/gm,
+  ARGUMENTS: /\b\w*parse|mission|help|players|get-missions|say|kick|set-mission|restart-server|start-server|stop-server|start-vindicta|start-unsung|reassign|ban|get-bans|remove-ban|ping\w*\b|-?[0-9]\d*(\.\d+)?|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“|(<[^]*[>$])/gm,
+  COMMANDS: /\b\w*parse|mission|help|players|get-missions|say|kick|set-mission|restart-server|start-server|stop-server|start-vindicta|start-unsung|reassign|ban|get-bans|remove-ban|ping\w*\b/gm,
   CONTENT: /"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“/gm,
   NUMBER: /^(?!.*<@)-?[0-9]\d*(\.\d+)?/gm,
   MENTION: /(<[^]*[>$])/gm,

@@ -1,5 +1,4 @@
 const progress = require("progress-string");
-const ftp = require("basic-ftp");
 const fs = require("fs");
 const axios = require("axios");
 const {
