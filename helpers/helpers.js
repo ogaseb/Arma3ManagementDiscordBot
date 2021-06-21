@@ -59,9 +59,6 @@ function stopServer() {
   const pid = fs.readFileSync("./arma3.pid", "utf8");
   if (require("is-running")(parseInt(pid))) {
     process.kill(parseInt(pid));
-    fs.unlink("./arma3.pid", function(err) {
-      if (err) return console.log(err);
-    });
   }
 }
 
@@ -80,9 +77,6 @@ function restartServer() {
 
   if (require("is-running")(parseInt(pid))) {
     process.kill(parseInt(pid));
-    fs.unlink("./arma3.pid", function(err) {
-      if (err) return console.log(err);
-    });
   }
 
   const interval = setInterval(async () => {
