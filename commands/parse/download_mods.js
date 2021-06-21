@@ -32,7 +32,7 @@ module.exports.downloadMods = async function(
       await fetchedMsg.edit(
         `${bar(interval + 1)} ${interval + 1}/${
           modsIdArray.length
-        } mod found, updating - ${modsNamesArray[interval]}`
+        }\n mod found, updating - ${modsNamesArray[interval]}`
       );
       interval++;
       if (interval + 1 > modsIdArray.length) {
