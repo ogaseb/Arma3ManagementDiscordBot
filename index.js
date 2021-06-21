@@ -1,9 +1,9 @@
 require("dotenv").config();
-require("newrelic");
 const BattleNode = require("battle-node");
 const { Client } = require("discord.js");
 const { stopServer, regexes, checkIfServerIsOn } = require("./helpers/helpers");
 const cron = require("node-cron");
+const { lastLogs } = require("./commands/last-logs/last-logs");
 const { pingServer } = require("./commands/ping/ping");
 const { removeBan } = require("./commands/remove_ban/remove_ban");
 const { checkIfDM } = require("./helpers/helpers");
@@ -51,18 +51,21 @@ let interval,
 const timeToSwitchOffServer = 1800000;
 
 const battleEye = () => {
-  if (interval) {
-    clearInterval(interval);
-    interval = null;
-  }
-  if (timeout) {
-    clearTimeout(timeout);
-    timeout = null;
-  }
-  if (switchServerOffInterval) {
-    clearTimeout(switchServerOffInterval);
-    switchServerOffInterval = null;
-  }
+  const clearIntervals = () => {
+    if (interval) {
+      clearInterval(interval);
+      interval = null;
+    }
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
+    if (switchServerOffInterval) {
+      clearTimeout(switchServerOffInterval);
+      switchServerOffInterval = null;
+    }
+  };
+  clearIntervals();
   try {
     bnode = new BattleNode(config);
     bnode.login();
@@ -76,18 +79,7 @@ const battleEye = () => {
         }, 15000));
       }
       if (success === true) {
-        if (interval) {
-          clearInterval(interval);
-          interval = null;
-        }
-        if (timeout) {
-          clearTimeout(timeout);
-          timeout = null;
-        }
-        if (switchServerOffInterval) {
-          clearTimeout(switchServerOffInterval);
-          switchServerOffInterval = null;
-        }
+        clearIntervals();
         interval = setInterval(async function() {
           bnode.sendCommand("players", async players => {
             let split = "";
@@ -109,10 +101,10 @@ const battleEye = () => {
                 switchServerOffInterval = setTimeout(() => {
                   console.log("now stopping serwer");
                   stopServer();
-                  let checkServerinterval = setInterval(() => {
+                  let checkServerInterval = setInterval(() => {
                     if (!checkIfServerIsOn()) {
-                      clearInterval(checkServerinterval);
-                      checkServerinterval = null;
+                      clearInterval(checkServerInterval);
+                      checkServerInterval = null;
                       return client.user.setActivity(
                         `Serwer został wyłączony.`,
                         {
@@ -155,18 +147,7 @@ const battleEye = () => {
 
     bnode.on("disconnected", async function() {
       console.log("disconnected");
-      if (interval) {
-        clearInterval(interval);
-        interval = null;
-      }
-      if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
-      }
-      if (switchServerOffInterval) {
-        clearTimeout(switchServerOffInterval);
-        switchServerOffInterval = null;
-      }
+      clearIntervals();
 
       return (timeout = setTimeout(async () => {
         if (bnode) bnode.socket.close();
@@ -314,5 +295,9 @@ const processCommand = async receivedMessage => {
 
   if (primaryCommand === "ping") {
     return pingServer(receivedMessage);
+  }
+
+  if (primaryCommand === "last-logs") {
+    return lastLogs(receivedMessage);
   }
 };

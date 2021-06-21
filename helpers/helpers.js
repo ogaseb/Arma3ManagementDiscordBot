@@ -2,8 +2,8 @@ const { spawn } = require("child_process");
 const fs = require("fs");
 
 const regexes = {
-  ARGUMENTS: /\b\w*parse|mission|help|players|get-missions|say|kick|set-mission|restart-server|start-server|stop-server|start-vindicta|start-unsung|reassign|ban|get-bans|remove-ban|ping\w*\b|-?[0-9]\d*(\.\d+)?|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“|(<[^]*[>$])/gm,
-  COMMANDS: /\b\w*parse|mission|help|players|get-missions|say|kick|set-mission|restart-server|start-server|stop-server|start-vindicta|start-unsung|reassign|ban|get-bans|remove-ban|ping\w*\b/gm,
+  ARGUMENTS: /\b\w*parse|mission|help|players|get-missions|say|kick|set-mission|restart-server|start-server|stop-server|start-vindicta|start-unsung|reassign|ban|get-bans|remove-ban|ping|last-logs\w*\b|-?[0-9]\d*(\.\d+)?|"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“|(<[^]*[>$])/gm,
+  COMMANDS: /\b\w*parse|mission|help|players|get-missions|say|kick|set-mission|restart-server|start-server|stop-server|start-vindicta|start-unsung|reassign|ban|get-bans|remove-ban|ping|last-logs\w*\b/gm,
   CONTENT: /"(?:\\"|[^"])+"|\'(?:\\'|[^'])+'|\“(?:\\“|[^“])+“/gm,
   NUMBER: /^(?!.*<@)-?[0-9]\d*(\.\d+)?/gm,
   MENTION: /(<[^]*[>$])/gm,
@@ -43,14 +43,25 @@ function validateAdmin(receivedMessage) {
   }
 }
 
+function checkLogsFileSizeAndRemove() {
+  const fileSize = fs.statSync("./out.log");
+  const logsFileSize = (fileSize.size / (1024 * 1024)).toFixed(2);
+  if (logsFileSize > 50) {
+    fs.unlink("./out.log", function(err) {
+      if (err) return console.log(err);
+      console.log("logs removed");
+    });
+  }
+}
+
 function stopServer() {
-  fs.unlink("./out.log", function(err) {
-    if (err) return console.log(err);
-    console.log("last logs removed");
-  });
+  checkLogsFileSizeAndRemove();
   const pid = fs.readFileSync("./arma3.pid", "utf8");
   if (require("is-running")(parseInt(pid))) {
     process.kill(parseInt(pid));
+    fs.unlink("./arma3.pid", function(err) {
+      if (err) return console.log(err);
+    });
   }
 }
 
@@ -64,14 +75,14 @@ function startServer() {
 }
 
 function restartServer() {
-  fs.unlink("./out.log", function(err) {
-    if (err) return console.log(err);
-    console.log("last logs removed");
-  });
+  checkLogsFileSizeAndRemove();
   const pid = fs.readFileSync("./arma3.pid", "utf8");
 
   if (require("is-running")(parseInt(pid))) {
     process.kill(parseInt(pid));
+    fs.unlink("./arma3.pid", function(err) {
+      if (err) return console.log(err);
+    });
   }
 
   const interval = setInterval(async () => {

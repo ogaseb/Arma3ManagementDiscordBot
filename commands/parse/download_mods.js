@@ -75,14 +75,8 @@ module.exports.downloadMods = async function(
       await fetchedMsg.edit(
         `${bar(interval + 1)} ${interval + 1}/${
           modsIdArray.length
-        } mod found, updating - ${modsNamesArray[interval]}`
+        }\n mod found, updating - ${modsNamesArray[interval]}`
       );
-      console.log(
-        `${bar(interval + 1)} ${interval + 1}/${
-          modsIdArray.length
-        } mod found, updating - ${modsNamesArray[interval]}`
-      );
-
       child.stdin.write("u\n");
       child.stdin.write("s\n");
       child.stdin.write("\n");
@@ -100,13 +94,9 @@ module.exports.downloadMods = async function(
       await fetchedMsg.edit(
         `${bar(interval + 1)} ${interval + 1}/${
           modsIdArray.length
-        } downloading - ${modsNamesArray[interval]}`
+        }\n downloading - ${modsNamesArray[interval]}`
       );
-      console.log(
-        `${bar(interval + 1)} ${interval + 1}/${
-          modsIdArray.length
-        } downloading - ${modsNamesArray[interval]}`
-      );
+
       child.stdin.write("d\n");
       child.stdin.write(`${id}\n`);
 
