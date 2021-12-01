@@ -6,7 +6,7 @@ export const startDirectaction = async function(receivedMessage, client) {
     await startPresetMission(
       receivedMessage,
       client,
-      "./bash/a3runscript_direct_action.sh"
+      path.join(__dirname, "../../a3runscript_direct_action.sh")
     );
     await receivedMessage.channel.send("Uruchamiam server z Direct Action...");
   } else {

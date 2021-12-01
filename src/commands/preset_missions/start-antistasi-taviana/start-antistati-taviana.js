@@ -6,7 +6,7 @@ export const startAntistasiTaviana = async function(receivedMessage, client) {
     await startPresetMission(
       receivedMessage,
       client,
-      "./bash/a3runscript_antistasi_taviana.sh"
+      path.join(__dirname, "../../a3runscript_antistasi_taviana.sh")
     );
     await receivedMessage.channel.send("Uruchamiam server z Antistasi Taviana");
   } else {

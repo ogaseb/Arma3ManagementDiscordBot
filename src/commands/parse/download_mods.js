@@ -2,6 +2,7 @@ import fs from "fs";
 import { spawn } from "child_process";
 import progress from "progress-string";
 import { restartServer } from "../../helpers/helpers";
+import path from "path";
 
 export const downloadMods = async function(
   receivedMessage,
@@ -45,13 +46,15 @@ export const downloadMods = async function(
         await fetchedMsg.edit(`Download completed, now starting the server`);
 
         const modLineID = modsIdArray.join(";") + ";";
-        await fs.writeFile(`./ids.txt`, `IDS="${modLineID}"`, async function(
-          err
-        ) {
-          if (err) {
-            return console.log(err);
+        await fs.writeFile(
+          path.join(__dirname, "../../../ids.txt"),
+          `IDS="${modLineID}"`,
+          async function(err) {
+            if (err) {
+              return console.log(err);
+            }
           }
-        });
+        );
         restartServer();
         return client.user.setActivity(`Serwer jest uruchamiany.`, {
           type: "WATCHING"
@@ -61,7 +64,7 @@ export const downloadMods = async function(
       }
     };
 
-    const child = spawn("./bash/a3upddownmod.sh");
+    const child = spawn(path.join(__dirname, "../../../a3upddownmod.sh"));
 
     try {
       await fs.promises.access(

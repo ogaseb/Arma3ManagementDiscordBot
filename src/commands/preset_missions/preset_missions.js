@@ -17,7 +17,7 @@ export const startPresetMission = async function(
     console.log("last logs removed");
   });
 
-  const pid = fs.readFileSync("./arma3.pid", "utf8");
+  const pid = fs.readFileSync(path.join(__dirname, "../../arma3.pid"), "utf8");
   console.log(pid);
 
   if (require("is-running")(parseInt(pid))) {
