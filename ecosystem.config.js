@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "WorldTensionBot",
+      name: "Arma3ManagementDiscordBot",
       script: "./index.js",
       instances: "1",
       exec_mode: "fork",

@@ -27,6 +27,12 @@ const { startVindicta } = require("./commands/start-vindicta/start-vindicta");
 const {
   startVindictaUnsung
 } = require("./commands/start-vindicta-unsung/start-vindicta-unsung");
+const {
+  startDirectaction
+} = require("./commands/start-directaction/start-directaction");
+const {
+  startAntistasiTaviana
+} = require("./commands/start-antistasi-taviana/start-antistati-taviana");
 
 const client = new Client();
 
@@ -177,24 +183,12 @@ client.on("ready", async () => {
   });
 
   cron.schedule(
-    "30 17 * * 1,5",
-    async () => {
-      await client.channels.cache
-        .get("753735965142417420")
-        .send(
-          `<@&753999685437489234> misja za pół godziny! Zbierać się powoli!`
-        );
-    },
-    {}
-  );
-
-  cron.schedule(
     "30 17 * * 7",
     async () => {
       await client.channels.cache
-        .get("753735965142417420")
+        .get("867800656344514590")
         .send(
-          `<@&753999685437489234> misja za pół godziny! Zbierać się powoli!`
+          `<@&868948657825779762> misja za pół godziny! Zbierać się powoli!`
         );
     },
     {}
@@ -283,6 +277,14 @@ const processCommand = async receivedMessage => {
 
   if (primaryCommand === "start-unsung") {
     return startVindictaUnsung(receivedMessage, client);
+  }
+
+  if (primaryCommand === "start-directaction") {
+    return startDirectaction(receivedMessage, client);
+  }
+
+  if (primaryCommand === "start-antistasi-taviana") {
+    return startAntistasiTaviana(receivedMessage, client);
   }
 
   if (primaryCommand === "stop-server") {
