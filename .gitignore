@@ -6,3 +6,5 @@ yarn.lock
 out.log
 ids.txt
 arma3.pid
+.vscode
+build/
