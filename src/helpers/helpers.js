@@ -46,10 +46,10 @@ function validateAdmin(receivedMessage) {
 }
 
 function checkLogsFileSizeAndRemove() {
-  const fileSize = fs.statSync(path.join(__dirname, "./out.log"));
+  const fileSize = fs.statSync(path.join(process.cwd(), "/out.log"));
   const logsFileSize = (fileSize.size / (1024 * 1024)).toFixed(2);
   if (logsFileSize > 50) {
-    fs.unlink("./out.log", function(err) {
+    fs.unlink(path.join(process.cwd(), "/out.log"), function(err) {
       if (err) return console.log(err);
       console.log("logs removed");
     });
@@ -58,16 +58,16 @@ function checkLogsFileSizeAndRemove() {
 
 function stopServer() {
   checkLogsFileSizeAndRemove();
-  const pid = fs.readFileSync(path.join(__dirname, "./arma3.pid"), "utf8");
+  const pid = fs.readFileSync(path.join(process.cwd(), "/arma3.pid"), "utf8");
   if (require("is-running")(parseInt(pid))) {
     process.kill(parseInt(pid));
   }
 }
 
 function startServer() {
-  const out = fs.openSync("./out.log", "a");
-  const err = fs.openSync("./out.log", "a");
-  spawn(path.join(__dirname, "./bash/a3runscript.sh"), [], {
+  const out = fs.openSync(path.join(process.cwd(), "/out.log"), "a");
+  const err = fs.openSync(path.join(process.cwd(), "/out.log"), "a");
+  spawn(path.join(process.cwd(), "/build/", "bash/a3runscript.sh"), [], {
     detached: true,
     stdio: ["ignore", out, err]
   }).unref();
@@ -75,7 +75,7 @@ function startServer() {
 
 function restartServer() {
   checkLogsFileSizeAndRemove();
-  const pid = fs.readFileSync(path.join(__dirname, "./arma3.pid"), "utf8");
+  const pid = fs.readFileSync(path.join(process.cwd(), "/arma3.pid"), "utf8");
 
   if (require("is-running")(parseInt(pid))) {
     process.kill(parseInt(pid));
@@ -84,9 +84,9 @@ function restartServer() {
   const interval = setInterval(async () => {
     if (!checkIfServerIsOn()) {
       clearInterval(interval);
-      const out = fs.openSync("./out.log", "a");
-      const err = fs.openSync("./out.log", "a");
-      spawn(path.join(__dirname, "./bash/a3runscript.sh"), [], {
+      const out = fs.openSync(path.join(process.cwd(), "/out.log"), "a");
+      const err = fs.openSync(path.join(process.cwd(), "/out.log"), "a");
+      spawn(path.join(process.cwd(), "/build/", "bash/a3runscript.sh"), [], {
         detached: true,
         stdio: ["ignore", out, err]
       }).unref();
@@ -95,7 +95,7 @@ function restartServer() {
 }
 
 function checkIfServerIsOn() {
-  const pid = fs.readFileSync(path.join(__dirname, "./arma3.pid"), "utf8");
+  const pid = fs.readFileSync(path.join(process.cwd(), "/arma3.pid"), "utf8");
   if (pid) {
     return require("is-running")(parseInt(pid));
   }

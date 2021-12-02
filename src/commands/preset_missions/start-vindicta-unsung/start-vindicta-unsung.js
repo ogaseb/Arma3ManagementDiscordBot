@@ -7,7 +7,7 @@ export const startVindictaUnsung = async function(receivedMessage, client) {
     await startPresetMission(
       receivedMessage,
       client,
-      path.join(__dirname, "./bash/a3runscript_vindicta_unsung.sh")
+      path.join(process.cwd(), "/build/", "bash/a3runscript_vindicta_unsung.sh")
     );
     await receivedMessage.channel.send(
       "Uruchamiam server z Vindicta Unsung..."

@@ -37,7 +37,8 @@
   },
   "scripts": {
     "copy-bash": "npx copyfiles -f src/bash/*.sh* build/bash",
-    "build": "yarn clean && yarn build-babel && yarn copy-bash",
+    "touch-files": "touch out.log && touch arma3.pid",
+    "build": "yarn clean && yarn build-babel && yarn copy-bash && yarn touch-files",
     "build-babel": "babel -d ./build src -s",
     "clean": "rm -rf build && mkdir build",
     "dev": "nodemon --exec babel-node src/index.js",
@@ -50,6 +51,7 @@
     }
   },
   "devDependencies": {
+    "chmodr": "^1.2.0",
     "copyfiles": "^2.4.1",
     "husky": "^3.0.7",
     "nodemon": "^1.19.4",

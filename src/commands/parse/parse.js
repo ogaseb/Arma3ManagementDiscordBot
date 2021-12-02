@@ -104,6 +104,7 @@ export const parseModList = async function(receivedMessage, client) {
         await client.user.setActivity(`Serwer jest wyłączony`, {
           type: "WATCHING"
         });
+        console.log(downloadMods());
         return downloadMods(
           receivedMessage,
           modsIdArray,

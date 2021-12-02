@@ -26,13 +26,24 @@ import { startVindictaUnsung } from "./commands/preset_missions/start-vindicta-u
 import { startDirectaction } from "./commands/preset_missions/start-directaction/start-directaction";
 import { startAntistasiTaviana } from "./commands/preset_missions/start-antistasi-taviana/start-antistati-taviana";
 import BattleNodeRcon from "./bnode/bnode";
+import chmodr from "chmodr";
+import path from "path";
+import os from "os";
 
-console.log(__dirname);
+chmodr(path.join(__dirname, "./bash"), 0o777, err => {
+  if (err) {
+    console.log("Failed to execute chmod", err);
+  } else {
+    console.log("Success");
+  }
+});
 const client = new Client();
 const battleEye = new BattleNodeRcon(client);
 
 void (async function() {
   try {
+    console.log(os.homedir());
+    console.log(path.join(process.cwd(), "/out.log"));
     await client.login(process.env.BOT_TOKEN);
   } catch (e) {
     console.log(e);
@@ -40,15 +51,6 @@ void (async function() {
 })();
 
 client.on("ready", async () => {
-  console.log("On Discord!");
-  console.log("Connected as " + client.user.tag);
-  console.log("Servers:");
-  Array.from(client.guilds.cache.values()).forEach(guild => {
-    console.log(" - " + guild.id);
-    Array.from(guild.channels.cache.values()).forEach(channel => {
-      console.log(` -- ${channel.name} (${channel.type}) - ${channel.id}`);
-    });
-  });
   battleEye.initBattleEye();
   await client.user.setActivity(`Serwer jest wyłączony`, {
     type: "WATCHING"

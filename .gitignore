@@ -4,6 +4,7 @@ yarn.lock
 .env
 /config/config.json
 out.log
+build/ids.txt
 ids.txt
 arma3.pid
 .vscode

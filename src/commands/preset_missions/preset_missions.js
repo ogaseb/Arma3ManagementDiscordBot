@@ -13,12 +13,12 @@ export const startPresetMission = async function(
   });
   pingServer(receivedMessage);
 
-  fs.unlink("./out.log", function(err) {
+  fs.unlink(path.join(process.cwd(), "/out.log"), function(err) {
     if (err) return console.log(err);
     console.log("last logs removed");
   });
 
-  const pid = fs.readFileSync(path.join(__dirname, "./arma3.pid"), "utf8");
+  const pid = fs.readFileSync(path.join(process.cwd(), "/arma3.pid"), "utf8");
   console.log(pid);
 
   if (require("is-running")(parseInt(pid))) {
@@ -28,8 +28,8 @@ export const startPresetMission = async function(
   const interval = setInterval(async () => {
     if (!checkIfServerIsOn()) {
       clearInterval(interval);
-      const out = fs.openSync(path.join(__dirname, "./out.log"), "a");
-      const err = fs.openSync(path.join(__dirname, "./out.log"), "a");
+      const out = fs.openSync(path.join(process.cwd(), "/out.log"), "a");
+      const err = fs.openSync(path.join(process.cwd(), "/out.log"), "a");
       spawn(command, [], {
         detached: true,
         stdio: ["ignore", out, err]

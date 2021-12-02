@@ -1,6 +1,7 @@
 import progress from "progress-string";
 import fs from "fs";
 import axios from "axios";
+import os from "os";
 import {
   validatePermissions,
   stopServer,
@@ -48,14 +49,14 @@ export const sendMission = async function(receivedMessage, client) {
           }
         });
         const missionFile = fs.createWriteStream(
-          `/home/propanek/Steam/arma3/mpmissions/${fileName}`
+          `${os.homedir()}/Steam/arma3/mpmissions/${fileName}`
         );
         response.data.pipe(missionFile);
 
         missionFile.on("finish", async function() {
           console.log(
             "file downloaded to ",
-            `/home/propanek/Steam/arma3/mpmissions/${fileName}`
+            `${os.homedir()}/Steam/arma3/mpmissions/${fileName}`
           );
 
           await receivedMessage.channel.send(

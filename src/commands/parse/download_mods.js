@@ -3,6 +3,9 @@ import { spawn } from "child_process";
 import progress from "progress-string";
 import { restartServer } from "../../helpers/helpers";
 import path from "path";
+import os from "os";
+
+console.log();
 
 export const downloadMods = async function(
   receivedMessage,
@@ -47,7 +50,7 @@ export const downloadMods = async function(
 
         const modLineID = modsIdArray.join(";") + ";";
         await fs.writeFile(
-          path.join(__dirname, "../../../ids.txt"),
+          path.join(process.cwd(), "/ids.txt"),
           `IDS="${modLineID}"`,
           async function(err) {
             if (err) {
@@ -64,11 +67,13 @@ export const downloadMods = async function(
       }
     };
 
-    const child = spawn(path.join(__dirname, "./bash/a3upddownmod.sh"));
+    const child = spawn(
+      path.join(process.cwd(), "/build/", "bash/a3upddownmod.sh")
+    );
 
     try {
       await fs.promises.access(
-        `/home/propanek/Steam/steamapps/workshop/content/107410/${id}`
+        `${os.homedir()}/Steam/steamapps/workshop/content/107410/${id}`
       );
       const msg = await receivedMessage.channel.messages.fetch({
         around: loading.id,
@@ -113,8 +118,8 @@ export const downloadMods = async function(
 
       child.on("close", code => {
         fs.symlink(
-          `/home/propanek/Steam/steamapps/workshop/content/107410/${id}`,
-          `/home/propanek/Steam/arma3/${id}`,
+          `${os.homedir()}/Steam/steamapps/workshop/content/107410/${id}`,
+          `${os.homedir()}/Steam/arma3/${id}`,
           err => {
             console.log(err);
           }
