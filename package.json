@@ -36,7 +36,8 @@
     "sequelize": "^5.21.2"
   },
   "scripts": {
-    "build": "yarn clean && yarn build-babel",
+    "copy-bash": "npx copyfiles -f src/bash/* build",
+    "build": "yarn clean && yarn build-babel && yarn copy-bash",
     "build-babel": "babel -d ./build src -s",
     "clean": "rm -rf build && mkdir build",
     "dev": "nodemon --exec babel-node src/index.js",
@@ -49,6 +50,7 @@
     }
   },
   "devDependencies": {
+    "copyfiles": "^2.4.1",
     "husky": "^3.0.7",
     "nodemon": "^1.19.4",
     "pm2": "^5.1.0",

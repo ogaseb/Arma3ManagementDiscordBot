@@ -46,7 +46,7 @@ function validateAdmin(receivedMessage) {
 }
 
 function checkLogsFileSizeAndRemove() {
-  const fileSize = fs.statSync(path.join(__dirname, "../../out.log"));
+  const fileSize = fs.statSync(path.join(__dirname, "./out.log"));
   const logsFileSize = (fileSize.size / (1024 * 1024)).toFixed(2);
   if (logsFileSize > 50) {
     fs.unlink("./out.log", function(err) {
@@ -58,7 +58,7 @@ function checkLogsFileSizeAndRemove() {
 
 function stopServer() {
   checkLogsFileSizeAndRemove();
-  const pid = fs.readFileSync(path.join(__dirname, "../../arma3.pid"), "utf8");
+  const pid = fs.readFileSync(path.join(__dirname, "./arma3.pid"), "utf8");
   if (require("is-running")(parseInt(pid))) {
     process.kill(parseInt(pid));
   }
@@ -67,7 +67,7 @@ function stopServer() {
 function startServer() {
   const out = fs.openSync("./out.log", "a");
   const err = fs.openSync("./out.log", "a");
-  spawn(path.join(__dirname, "../../a3runscript.sh"), [], {
+  spawn(path.join(__dirname, "./a3runscript.sh"), [], {
     detached: true,
     stdio: ["ignore", out, err]
   }).unref();
@@ -75,7 +75,7 @@ function startServer() {
 
 function restartServer() {
   checkLogsFileSizeAndRemove();
-  const pid = fs.readFileSync(path.join(__dirname, "../../arma3.pid"), "utf8");
+  const pid = fs.readFileSync(path.join(__dirname, "./arma3.pid"), "utf8");
 
   if (require("is-running")(parseInt(pid))) {
     process.kill(parseInt(pid));
@@ -86,7 +86,7 @@ function restartServer() {
       clearInterval(interval);
       const out = fs.openSync("./out.log", "a");
       const err = fs.openSync("./out.log", "a");
-      spawn(path.join(__dirname, "../../a3runscript.sh"), [], {
+      spawn(path.join(__dirname, "./a3runscript.sh"), [], {
         detached: true,
         stdio: ["ignore", out, err]
       }).unref();
@@ -95,7 +95,7 @@ function restartServer() {
 }
 
 function checkIfServerIsOn() {
-  const pid = fs.readFileSync(path.join(__dirname, "../../arma3.pid"), "utf8");
+  const pid = fs.readFileSync(path.join(__dirname, "./arma3.pid"), "utf8");
   if (pid) {
     return require("is-running")(parseInt(pid));
   }

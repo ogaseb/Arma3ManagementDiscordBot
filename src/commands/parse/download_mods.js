@@ -64,7 +64,7 @@ export const downloadMods = async function(
       }
     };
 
-    const child = spawn(path.join(__dirname, "../../../a3upddownmod.sh"));
+    const child = spawn(path.join(__dirname, "./a3upddownmod.sh"));
 
     try {
       await fs.promises.access(

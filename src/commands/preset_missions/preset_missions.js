@@ -1,6 +1,7 @@
 import { checkIfServerIsOn, pingServer } from "../../helpers/helpers";
 import fs from "fs";
 import { spawn } from "child_process";
+import path from "path";
 
 export const startPresetMission = async function(
   receivedMessage,
@@ -17,7 +18,7 @@ export const startPresetMission = async function(
     console.log("last logs removed");
   });
 
-  const pid = fs.readFileSync(path.join(__dirname, "../../arma3.pid"), "utf8");
+  const pid = fs.readFileSync(path.join(__dirname, "./arma3.pid"), "utf8");
   console.log(pid);
 
   if (require("is-running")(parseInt(pid))) {
@@ -27,8 +28,8 @@ export const startPresetMission = async function(
   const interval = setInterval(async () => {
     if (!checkIfServerIsOn()) {
       clearInterval(interval);
-      const out = fs.openSync("./out.log", "a");
-      const err = fs.openSync("./out.log", "a");
+      const out = fs.openSync(path.join(__dirname, "./out.log"), "a");
+      const err = fs.openSync(path.join(__dirname, "./out.log"), "a");
       spawn(command, [], {
         detached: true,
         stdio: ["ignore", out, err]
