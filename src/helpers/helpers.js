@@ -67,7 +67,7 @@ function stopServer() {
 function startServer() {
   const out = fs.openSync("./out.log", "a");
   const err = fs.openSync("./out.log", "a");
-  spawn(path.join(__dirname, "./a3runscript.sh"), [], {
+  spawn(path.join(__dirname, "./bash/a3runscript.sh"), [], {
     detached: true,
     stdio: ["ignore", out, err]
   }).unref();

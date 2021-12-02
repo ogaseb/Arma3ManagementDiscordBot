@@ -73,9 +73,9 @@ CURL_CMD="/usr/bin/curl"               # CURL command
 STEAM_CHANGELOG_URL="https://steamcommunity.com/sharedfiles/filedetails/changelog"    # URL to get the date of the last MOD's update in a WorkShop
 # Change it according to your paths
 # Path to 'steamcmd' executable file
-STEAM_CMD_PATH="/home/propanek/Steam/steamcmd.sh"
+STEAM_CMD_PATH=$HOME"/Steam/steamcmd.sh"
 # Path to there is Workshop downloaded the MODs
-WORKSHOP_PATH="/home/propanek/Steam/steamapps/workshop"
+WORKSHOP_PATH=$HOME"/Steam/steamapps/workshop"
 # Notification script
 NOTIFICATION_SCRIPT=$(dirname "${BASH_SOURCE[0]}")/notify_update_status.sh
 
