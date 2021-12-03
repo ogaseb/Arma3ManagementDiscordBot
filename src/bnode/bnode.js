@@ -4,6 +4,10 @@ import { stopServer, regexes, checkIfServerIsOn } from "../helpers/helpers";
 
 class BattleNodeRcon {
   #config;
+  #switchServerOffInterval;
+  #interval;
+  #playerCount;
+  #timeout;
 
   constructor(client) {
     this.#config = {
@@ -11,11 +15,12 @@ class BattleNodeRcon {
       port: process.env.RCON_PORT,
       rconPassword: process.env.RCON_PASSWORD
     };
+    this.#interval = null;
+    this.#timeout = null;
+    this.#switchServerOffInterval = null;
+    this.#playerCount = 0;
     this.bnode = null;
     this.client = client;
-    this.interval = null;
-    this.switchServerOffInterval = null;
-    this.playerCount = 0;
   }
 
   get battleEyeRcon() {
@@ -35,17 +40,17 @@ class BattleNodeRcon {
   };
 
   clearIntervals = () => {
-    if (this.interval) {
-      clearInterval(this.interval);
-      this.interval = null;
+    if (this.#interval) {
+      clearInterval(this.#interval);
+      this.#interval = null;
     }
-    if (this.timeout) {
-      clearTimeout(this.timeout);
-      this.timeout = null;
+    if (this.#timeout) {
+      clearTimeout(this.#timeout);
+      this.#timeout = null;
     }
-    if (this.switchServerOffInterval) {
-      clearTimeout(this.switchServerOffInterval);
-      this.switchServerOffInterval = null;
+    if (this.#switchServerOffInterval) {
+      clearTimeout(this.#switchServerOffInterval);
+      this.#switchServerOffInterval = null;
     }
   };
 
@@ -58,23 +63,23 @@ class BattleNodeRcon {
       await this.client.user.setActivity(`graczy na serwerze: ${split}`, {
         type: "WATCHING"
       });
-      this.playerCount = split;
+      this.#playerCount = split;
       this.stopServerOnEmpty();
     });
   };
 
   stopServerOnEmpty = () => {
     const timeToSwitchOffServer = 1800000;
-    const parsedPlayerCount = parseInt(this.playerCount);
+    const parsedPlayerCount = parseInt(this.#playerCount);
     if (parsedPlayerCount > 0) {
       console.log("there are players here stop countdown!".red);
 
-      clearTimeout(this.switchServerOffInterval);
-      this.switchServerOffInterval = null;
+      clearTimeout(this.#switchServerOffInterval);
+      this.#switchServerOffInterval = null;
     } else if (parsedPlayerCount === 0) {
       console.log("there no players here countdown started".red);
-      if (this.switchServerOffInterval === null) {
-        this.switchServerOffInterval = setTimeout(() => {
+      if (this.#switchServerOffInterval === null) {
+        this.#switchServerOffInterval = setTimeout(() => {
           console.log("now stopping server".yellow);
           stopServer();
           let checkServerInterval = setInterval(() => {
@@ -103,7 +108,7 @@ class BattleNodeRcon {
       }
       if (success === true) {
         this.clearIntervals();
-        this.interval = setInterval(async () => {
+        this.#interval = setInterval(async () => {
           try {
             this.battleEyePlayerCount();
           } catch (e) {
@@ -120,9 +125,9 @@ class BattleNodeRcon {
 
   onMessage = () => {
     this.bnode.on("message", async message => {
-      if (this.timeout) {
-        clearTimeout(this.timeout);
-        this.timeout = null;
+      if (this.#timeout) {
+        clearTimeout(this.#timeout);
+        this.#timeout = null;
       }
       const checkIfAdminLogin = message.split(" ");
       if (
@@ -144,7 +149,7 @@ class BattleNodeRcon {
       console.log("disconnected");
       this.clearIntervals();
 
-      return (this.timeout = setTimeout(async () => {
+      return (this.#timeout = setTimeout(async () => {
         if (this.bnode) this.bnode.socket.close();
         this.bnode = null;
         this.initBattleEye();
