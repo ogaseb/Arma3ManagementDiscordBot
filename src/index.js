@@ -3,32 +3,33 @@ import "colors";
 import { Client } from "discord.js";
 import { regexes } from "./helpers/helpers";
 import cron from "node-cron";
-import { lastLogs } from "./commands/last-logs/last-logs";
-import { pingServer } from "./commands/ping/ping";
-import { removeBan } from "./commands/remove_ban/remove_ban";
 import { checkIfDM } from "./helpers/helpers";
-import { getBannedUsers } from "./commands/get_bans/get_bans";
-import { banUser } from "./commands/ban/ban";
-import { reassignRoles } from "./commands/reassign/reassign";
-import { restartServerCommand } from "./commands/restart-server/restart-server";
-import { startServerCommand } from "./commands/start-server/start-server";
-import { stopServerCommand } from "./commands/stop-server/stop-server";
-import { setMission } from "./commands/set_mission/set_mission";
-import { kickUser } from "./commands/kick/kick";
-import { sayToUsers } from "./commands/say/say";
-import { getMissions } from "./commands/get_missions/get_missions";
-import { getPlayers } from "./commands/players/players";
-import { parseModList } from "./commands/parse/parse";
-import { sendMission } from "./commands/mission/mission";
-import { sendHelp } from "./commands/help/help";
-import { startVindicta } from "./commands/preset_missions/start-vindicta/start-vindicta";
-import { startVindictaUnsung } from "./commands/preset_missions/start-vindicta-unsung/start-vindicta-unsung";
-import { startDirectaction } from "./commands/preset_missions/start-directaction/start-directaction";
-import { startAntistasiTaviana } from "./commands/preset_missions/start-antistasi-taviana/start-antistati-taviana";
 import BattleNodeRcon from "./bnode/bnode";
 import chmodr from "chmodr";
 import path from "path";
-import os from "os";
+import {
+  lastLogs,
+  pingServer,
+  removeBan,
+  getBannedUsers,
+  banUser,
+  reassignRoles,
+  restartServerCommand,
+  startServerCommand,
+  stopServerCommand,
+  setMission,
+  kickUser,
+  sayToUsers,
+  getMissions,
+  getPlayers,
+  parseModList,
+  sendMission,
+  sendHelp,
+  startVindicta,
+  startVindictaUnsung,
+  startDirectaction,
+  startAntistasiTaviana
+} from "./commands/index";
 
 chmodr(path.join(__dirname, "./bash"), 0o777, err => {
   if (err) {
@@ -42,8 +43,6 @@ const battleEye = new BattleNodeRcon(client);
 
 void (async function() {
   try {
-    console.log(os.homedir());
-    console.log(path.join(process.cwd(), "/out.log"));
     await client.login(process.env.BOT_TOKEN);
   } catch (e) {
     console.log(e);
@@ -94,86 +93,48 @@ const processCommand = async receivedMessage => {
     messageArguments.splice(0, 1);
   }
 
-  if (primaryCommand === "parse") {
-    return parseModList(receivedMessage, client);
-  }
-
-  if (primaryCommand === "mission") {
-    return sendMission(receivedMessage, client);
-  }
-
-  if (primaryCommand === "help") {
-    return sendHelp(receivedMessage).build();
-  }
-
-  if (primaryCommand === "players") {
-    return getPlayers(receivedMessage, battleEye);
-  }
-
-  if (primaryCommand === "get-missions") {
-    return getMissions(receivedMessage, battleEye);
-  }
-
-  if (primaryCommand === "set-mission") {
-    return setMission(receivedMessage, battleEye, messageArguments);
-  }
-
-  if (primaryCommand === "say") {
-    return sayToUsers(receivedMessage, battleEye, messageArguments);
-  }
-  if (primaryCommand === "kick") {
-    return kickUser(receivedMessage, battleEye, messageArguments);
-  }
-
-  if (primaryCommand === "ban") {
-    return banUser(receivedMessage, battleEye, messageArguments);
-  }
-
-  if (primaryCommand === "remove-ban") {
-    return removeBan(receivedMessage, battleEye, messageArguments);
-  }
-
-  if (primaryCommand === "get-bans") {
-    return getBannedUsers(receivedMessage, battleEye);
-  }
-
-  if (primaryCommand === "restart-server") {
-    return restartServerCommand(receivedMessage, client);
-  }
-
-  if (primaryCommand === "start-server") {
-    return startServerCommand(receivedMessage, client);
-  }
-
-  if (primaryCommand === "start-vindicta") {
-    return startVindicta(receivedMessage, client);
-  }
-
-  if (primaryCommand === "start-unsung") {
-    return startVindictaUnsung(receivedMessage, client);
-  }
-
-  if (primaryCommand === "start-directaction") {
-    return startDirectaction(receivedMessage, client);
-  }
-
-  if (primaryCommand === "start-antistasi-taviana") {
-    return startAntistasiTaviana(receivedMessage, client);
-  }
-
-  if (primaryCommand === "stop-server") {
-    return stopServerCommand(receivedMessage, client);
-  }
-
-  if (primaryCommand === "reassign") {
-    return reassignRoles(receivedMessage, battleEye);
-  }
-
-  if (primaryCommand === "ping") {
-    return pingServer(receivedMessage);
-  }
-
-  if (primaryCommand === "last-logs") {
-    return lastLogs(receivedMessage);
+  switch (primaryCommand) {
+    case "parse":
+      return parseModList(receivedMessage, client);
+    case "mission":
+      return sendMission(receivedMessage, client);
+    case "help":
+      return sendHelp(receivedMessage).build();
+    case "players":
+      return getPlayers(receivedMessage, battleEye);
+    case "get-missions":
+      return getMissions(receivedMessage, battleEye);
+    case "set-mission":
+      return setMission(receivedMessage, battleEye, messageArguments);
+    case "say":
+      return sayToUsers(receivedMessage, battleEye, messageArguments);
+    case "kick":
+      return kickUser(receivedMessage, battleEye, messageArguments);
+    case "ban":
+      return banUser(receivedMessage, battleEye, messageArguments);
+    case "remove-ban":
+      return removeBan(receivedMessage, battleEye, messageArguments);
+    case "get-bans":
+      return getBannedUsers(receivedMessage, battleEye);
+    case "restart-server":
+      return restartServerCommand(receivedMessage, client);
+    case "start-server":
+      return startServerCommand(receivedMessage, client);
+    case "start-vindicta":
+      return startVindicta(receivedMessage, client);
+    case "start-unsung":
+      return startVindictaUnsung(receivedMessage, client);
+    case "start-directaction":
+      return startDirectaction(receivedMessage, client);
+    case "start-antistasi-taviana":
+      return startAntistasiTaviana(receivedMessage, client);
+    case "stop-server":
+      return stopServerCommand(receivedMessage, client);
+    case "reassign":
+      return reassignRoles(receivedMessage, battleEye);
+    case "ping":
+      return pingServer(receivedMessage);
+    case "last-logs":
+      return lastLogs(receivedMessage);
   }
 };
