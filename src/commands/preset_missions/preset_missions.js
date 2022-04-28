@@ -12,14 +12,7 @@ export const startPresetMission = async function(
     type: "WATCHING"
   });
   pingServer(receivedMessage);
-
-  fs.unlink(path.join(process.cwd(), "/out.log"), function(err) {
-    if (err) return console.log(err);
-    console.log("last logs removed");
-  });
-
   const pid = fs.readFileSync(path.join(process.cwd(), "/arma3.pid"), "utf8");
-  console.log(pid);
 
   if (require("is-running")(parseInt(pid))) {
     process.kill(parseInt(pid));

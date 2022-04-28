@@ -57,7 +57,6 @@ function checkLogsFileSizeAndRemove() {
 }
 
 function stopServer() {
-  checkLogsFileSizeAndRemove();
   const pid = fs.readFileSync(path.join(process.cwd(), "/arma3.pid"), "utf8");
   if (require("is-running")(parseInt(pid))) {
     process.kill(parseInt(pid));
@@ -74,7 +73,7 @@ function startServer() {
 }
 
 function restartServer() {
-  checkLogsFileSizeAndRemove();
+  // checkLogsFileSizeAndRemove();
   const pid = fs.readFileSync(path.join(process.cwd(), "/arma3.pid"), "utf8");
 
   if (require("is-running")(parseInt(pid))) {
